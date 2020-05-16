@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import {
+  HashRouter
+} from "react-router-dom";
+import {
+  Provider
+} from "react-redux";
+
+import mainStore from "./redux/store";
+
+import "./App.scss";
+import Loading from "./components/loading";
+
+// Containers
+//const Home = React.lazy( () => import( "./components/home" ) );
+//const LoginModal = React.lazy( () => import( "./components/loginModal" ) );
+const Root = React.lazy( () => import( "./components/root" ) );
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={ mainStore }>
+      <HashRouter>
+        <React.Suspense fallback={ <Loading /> }>
+          <Root />
+        </React.Suspense>
+      </HashRouter>
+    </Provider>
   );
+
 }
 
 export default App;
