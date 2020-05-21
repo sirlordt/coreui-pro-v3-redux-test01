@@ -1,5 +1,18 @@
 // Variable overrides
 
 $theme-colors: (
+
   "primary": red,
+  "secondary": gray
+
+);
+
+$custom_primary: map-get( $theme-colors, "primary" );
+$custom_secondary: map-get( $theme-colors, "secondary" );
+
+$theme-colors__dt: (
+
+  "primary": desaturate( $custom_primary, 40% ),
+  "secondary": desaturate( $custom_secondary, 40% )
+
 );

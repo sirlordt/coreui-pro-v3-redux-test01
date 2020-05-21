@@ -130,7 +130,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = ( state ) => {
 
-  console.log( "Left Side State => ", state );
+  //console.log( "Left Side State => ", state );
 
   return {
     authentication: state.authentication,

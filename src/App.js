@@ -6,6 +6,8 @@ import {
   Provider
 } from "react-redux";
 
+import "./utils/icons";
+
 import mainStore from "./redux/store";
 
 import "./App.scss";

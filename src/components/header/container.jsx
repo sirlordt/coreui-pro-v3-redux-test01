@@ -3,7 +3,7 @@ import React, {
   //Suspense
 } from "react";
 import {
-  Link
+  withRouter
 } from "react-router-dom";
 import {
   connect
@@ -22,10 +22,14 @@ import {
   CBreadcrumbRouter
   //CLink
 } from "@coreui/react";
+/*
 import {
   CIcon
 } from "@coreui/icons-react";
-
+*/
+import {
+  FontAwesomeIcon
+} from "@fortawesome/react-fontawesome";
 // routes config
 //import routes from '../../routes';
 
@@ -40,10 +44,6 @@ import {
   toggleLeftSidebarMobile,
   toggleRightSidebar
 } from "../../redux/actions";
-
-import {
-  showModalLogin
-} from "../../redux/actions/modals";
 
 //const LoginModal = React.lazy( () => import( "../loginModal" ) );
 
@@ -74,21 +74,46 @@ class Header extends Component {
 
       <React.Fragment>
 
-        <CToggler
-          inHeader
-          className="ml-md-3 d-lg-none"
-          onClick={ ( event ) => this.props.toggleLeftSidebarMobile( event ) }
-        />
-        <CToggler
-          inHeader
-          className="ml-3 d-md-down-none"
-          onClick={ ( event ) => this.props.toggleLeftSidebar( event ) }
-        />
-        <CHeaderBrand className="mx-auto d-lg-none" to="/">
-          <CIcon src={ logo } height="48" alt="Logo" />
-        </CHeaderBrand>
+        {
 
-        {/*
+          this.props.authentication.active ? (
+            <React.Fragment>
+              <CToggler
+                inHeader
+                className="ml-md-3 d-lg-none"
+                onClick={ ( event ) => this.props.toggleLeftSidebarMobile( event ) }
+              />
+              <CToggler
+                inHeader
+                className="ml-3 d-md-down-none"
+                onClick={ ( event ) => this.props.toggleLeftSidebar( event ) }
+              />
+            </React.Fragment>
+          ) : null
+
+        }
+
+        {
+
+          !this.props.authentication.active ? (
+            <React.Fragment>
+
+              <CHeaderBrand className="ml-2" to="/home">
+                <img src={ logo } height="48" alt="Logo" />
+              </CHeaderBrand>
+
+              <div className="mx-auto" />
+
+            </React.Fragment>
+          ) : (
+            <CHeaderBrand className="mx-auto d-lg-none" to="/home">
+              <img src={ logo } height="48" alt="Logo" />
+            </CHeaderBrand>
+          )
+
+        }
+
+        {/* mx-auto d-lg-none
         <CHeaderNav className="d-md-down-none mr-auto">
           <CHeaderNavItem className="px-3">
             <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
@@ -103,118 +128,66 @@ class Header extends Component {
         */}
 
         <CHeaderNav className="ml-lg-auto mr-2">
-          {/*
-          <PublicHeaderDropdown notif />
-          <PublicHeaderDropdown tasks />
-          <PublicHeaderDropdown mssgs />
-          <PublicHeaderDropdown accnt />
-          */}
-          {/*
-          <CToggler
-            inHeader
-            className=""
-            onClick={ ( e ) => this.props.toggleRightSidebar( e ) }
-          >
-            <CIcon
-              name="cil-applications-settings"
-              size="lg"
-            />
-          </CToggler>
-          */}
-          {/*
-          <CButton block>
-            <CIcon
-              name="cil-cogs"
-              size="lg"
-            />
-          </CButton>
-          */}
-          <Link to="/login">
-            <CButton
-              className="ml-2"
-              color="primary"
-            >
-              {/*
-              onClick={ ( event ) => {
 
-                this.props.showModalLogin( event );
+          {
 
-              }*/}
+            !this.props.authentication.active ? (
 
+              <React.Fragment>
 
-              <CIcon
-                name="cil-user"
-                size="lg"
-              />
-              <span className="ml-2 d-sm-down-none">
-                Login
-              </span>
-            </CButton>
-          </Link>
-          {/*
-          <Suspense fallback={ null }>
-            <LoginModal />
-          </Suspense>
-          */}
-          <CButton className="ml-2" color="success">
-            <CIcon
-              name="cil-plus"
-              size="lg"
-            />
-            <span className="ml-2 d-sm-down-none">
-              Signup
-            </span>
-          </CButton>
-          {/*
-          <CToggler
-            inHeader
-            className=""
-            onClick={ ( e ) => this.props.toggleRightSidebar( e ) }
-          >
-            <CIcon
-              name="cil-applications-settings"
-              size="lg"
-            />
-            <small className="ml-2 d-sm-down-none">
-              Login
-            </small>
-          </CToggler>
-          <CToggler
-            inHeader
-            className=""
-            onClick={ ( e ) => this.props.toggleRightSidebar( e ) }
-          >
-            <CIcon
-              name="cil-applications-settings"
-              size="lg"
-            />
-            <small className="ml-2 d-sm-down-none">
-              Signup
-            </small>
-          </CToggler>
-          */}
-          {/*
-          <CToggler
-            inHeader
-            className="mr-md-3 d-lg-none"
-            onClick={ ( e ) => toggleRightSidebar( e ) }
-          >
-            <CIcon
-              name="cil-applications-settings"
-              size="lg"
-            />
-          </CToggler>
-          <CToggler
-            inHeader
-            className="mr-3 d-md-down-none"
-            onClick={ ( e ) => toggleRightSidebar( e ) }
-          >
-            <CIcon
-              name="cil-applications-settings"
-              size="lg"
-            />
-          </CToggler>
-          */}
+                <CButton
+                  className="ml-2 box-shadow-none"
+                  color="primary"
+                  onClick={ () => {
+
+                    //this.props.showModalLogin( event );
+                    this.props.history.push( "/login" );
+
+                  } }
+                >
+                  <FontAwesomeIcon icon="sign-in-alt" />
+                  <span className="ml-2 d-sm-down-none">
+                    Login
+                  </span>
+                </CButton>
+
+                <CButton
+                  className="ml-2 box-shadow-none"
+                  color="success">
+                  <FontAwesomeIcon icon="user-plus" />
+                  <span className="ml-2 d-sm-down-none">
+                    Signup
+                  </span>
+                </CButton>
+
+              </React.Fragment>
+
+            ) : (
+
+              <React.Fragment>
+
+                <CButton
+                  className="ml-2 box-shadow-none"
+                  color="primary"
+                  onClick={ () => {
+
+                    //this.props.showModalLogin( event );
+                    this.props.history.push( "/logout" );
+
+                  } }
+                >
+                  <FontAwesomeIcon icon="sign-out-alt" />
+                  <span className="ml-2 d-sm-down-none">
+                    Logout
+                  </span>
+                </CButton>
+
+              </React.Fragment>
+
+            )
+
+          }
+
         </CHeaderNav>
 
         <CSubheader className="pl-3 justify-content-between*">
@@ -232,8 +205,13 @@ class Header extends Component {
               onClick={ this.props.toggleDark }
               title="Toggle Light/Dark Mode"
             >
+              <FontAwesomeIcon icon="moon" name="cil-moon" className="c-d-dark-none" alt="CoreUI Icons Moon" />
+              <FontAwesomeIcon icon="sun" name="cil-sun" className="c-d-default-none" alt="CoreUI Icons Sun" />
+
+              {/*
               <CIcon name="cil-moon" className="c-d-dark-none" alt="CoreUI Icons Moon" />
               <CIcon name="cil-sun" className="c-d-default-none" alt="CoreUI Icons Sun" />
+              */}
             </CToggler>
 
           </CHeaderNav>
@@ -289,8 +267,7 @@ const mapDispatchToProps = {
   toggleDark,
   toggleLeftSidebar,
   toggleLeftSidebarMobile,
-  toggleRightSidebar,
-  showModalLogin
+  toggleRightSidebar
 };
 
 const mapStateToProps = ( state ) => {
@@ -309,6 +286,6 @@ const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
 
 const connectedComponent = connectedWrapper( Header );
 
-export default connectedComponent;
+export default withRouter( connectedComponent );
 
 //export default Header;

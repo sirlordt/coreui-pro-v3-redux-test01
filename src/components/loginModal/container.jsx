@@ -18,18 +18,26 @@ import {
   CFormGroup,
   CInputGroup,
   CInputGroupPrepend,
+  CInputGroupAppend,
+  CInvalidFeedback,
   CInputGroupText,
   CInput,
   CButton
 } from "@coreui/react";
+/*
 import {
   CIcon
 } from "@coreui/icons-react";
+*/
+import {
+  FontAwesomeIcon
+} from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 
 import {
   login
 } from "../../redux/actions";
+import SystemUtils from "../../utils/systemUtils";
 
 const propTypes = {
   children: PropTypes.node
@@ -45,11 +53,20 @@ class LoginModal extends Component {
 
     this.state = {
 
-      Username: "",
-      Password: ""
-      //Message: ""
+      id: SystemUtils.getUUIDv4(),
+      showModal: true,
+      fieldUsernameIsValid: true,
+      username: "",
+      fieldPasswordIsValid: true,
+      password: "",
+      isError: false,
+      message: "",
+      buttonLoginDisabled: false,
+      buttonCancelDisabled: false
 
     };
+
+    this.inputUsername = React.createRef();
 
   }
 
@@ -99,6 +116,101 @@ class LoginModal extends Component {
   }
   */
 
+  componentDidMount() {
+
+    //console.log( "componentDidMount => ", this.inputUsername );
+
+    setTimeout( () => {
+
+      this.inputUsername.current.focus();
+
+    }, 100 );
+
+  }
+
+  componentDidUpdate( prevProps ) {
+
+    console.log( "id =>", this.state.id );
+    console.log( "props =>", this.props );
+    console.log( "prevProps =>", prevProps );
+
+    if ( this.state.id === this.props.authentication.transactionId &&
+         this.props.authentication.responseMark !== prevProps.authentication.responseMark ) {
+
+      if ( this.props.authentication.response.Code === "NO_RESPONSE_FROM_SERVER" ) {
+
+        this.setState( {
+          message: this.props.authentication.response.Message,
+          isError: true
+        } );
+
+        this.closeModalWithTransition( 2000 );
+
+      }
+      else if ( this.props.authentication.response.Code === "SUCCESS_LOGIN" ) {
+
+        this.setState( {
+          message: this.props.authentication.response.Message,
+          isError: false
+        } );
+
+        this.closeModalWithTransition( 2000 );
+
+      }
+      else {
+
+        this.setState( {
+          message: this.props.authentication.response.Message,
+          isError: true,
+          buttonLoginDisabled: false,
+          buttonCancelDisabled: false
+        } );
+
+      }
+
+    }
+
+    //return bResult;
+
+  }
+
+  /*
+  handleReducerNotification = ( payload ) => {
+
+    console.log( "handleReducerNotification => ", payload );
+
+    if ( payload.Data.Code === "NO_RESPONSE_FROM_SERVER" ) {
+
+      this.setState( {
+        Message: payload.Data.Message,
+        IsError: true
+      } );
+
+      this.closeModalWithTransition( 2000 );
+
+    }
+    else if ( payload.Data.Code === "LOGIN_FAILED" ) {
+
+      this.setState( {
+        Message: payload.Data.Message,
+        IsError: true
+      } );
+
+    }
+    else if ( payload.Data.Code === "LOGIN_SUCCESS" ) {
+
+      this.setState( {
+        Message: payload.Data.Message,
+        IsError: false
+      } );
+
+      this.closeModalWithTransition( 2000 );
+
+    }
+
+  }
+  */
+
   onChange = ( event ) => {
 
     this.setState( {
@@ -109,136 +221,114 @@ class LoginModal extends Component {
 
   };
 
-  onCloseModal = () => {
+  closeModalWithTransition = ( intDelay ) => {
 
-    // Clear errors
-    //this.props.clearErrors();
+    setTimeout( () => {
 
-    /*
-    this.setState( {
+      this.setState( {
 
-      modal: !this.state.modal
+        showModal: false
 
-    } );
-    */
+      } );
 
-    //console.log( "toogle" );
-    //this.props.hideModalLogin();
+      setTimeout( () => {
 
-    if ( this.props.history.action !== "POP" ) {
+        if ( this.props.history.action !== "POP" ) {
 
-      this.props.history.goBack();
+          this.props.history.goBack();
 
-    }
-    else {
+        }
+        else {
 
-      this.props.history.push( "/home" );
+          this.props.history.push( "/home" );
 
-    }
+        }
+
+      }, 300 );
+
+    }, intDelay );
+
+  }
+
+  onCloseModal = ( event ) => {
+
+    event && event.preventDefault();
+
+    this.closeModalWithTransition( 1 );
 
   };
 
   onClickButtonLogin = ( event ) => {
 
-    //console.log( "onButtonLoginClick" );
+    event && event.preventDefault();
 
-    event.preventDefault();
+    const bFieldUsernameIsValid = !!( this.state.username && this.state.username.trim() !== "" );
+    const bFieldPasswordIsValid = !!( this.state.password && this.state.password.trim() !== "" );
 
-    //this.props.hideModalLogin();
+    //console.log( bFieldUsernameIsValid );
 
-    this.props.login( {
-      Username: this.state.Username,
-      Password: this.state.Password
-    } );
+    if ( bFieldUsernameIsValid &&
+         bFieldPasswordIsValid ) {
 
-    //console.log( "Login Modal State =>", this.props.authentication );
+      this.setState( {
+        fieldUsernameIsValid: true,
+        fieldPasswordIsValid: true,
+        buttonLoginDisabled: true,
+        buttonCancelDisabled: true
+      } );
 
-    //console.log( this.props.modals );
+      /*
+      setTimeout( () => {
 
-    /*
-    this.setState( {
-      state: this.state
-    } );
-    */
+        this.inputUsername.current.focus();
 
-    /*
-    const {
-      username,
-      password
-    } = this.state;
+      }, 100 );
+      */
 
-    const loginRequestData = {
-      username,
-      password
-    };
+      this.props.login( {
+        transactionId: this.state.id,
+        username: this.state.username,
+        password: this.state.password
+        //Callback: this.handleReducerNotification
+      } );
 
-    // Attempt to login
-    this.props.login( loginRequestData );
-    */
+    }
+    else {
+
+      this.setState( {
+        fieldUsernameIsValid: bFieldUsernameIsValid,
+        fieldPasswordIsValid: bFieldPasswordIsValid
+      } );
+
+    }
 
   };
 
   onClickButtonCancel = ( event ) => {
 
-    //console.log( "onButtonCancelClick" );
+    event && event.preventDefault();
 
-    event.preventDefault();
-
-    if ( this.props.history.action !== "POP" ) {
-
-      this.props.history.goBack();
-
-    }
-    else {
-
-      this.props.history.push( "/home" );
-
-    }
-
-    //this.props.hideModalLogin();
-
-    //console.log( this.props.modals );
-
-    /*
-    this.setState( {
-      state: this.state
-    } );
-    */
-
-    /*
-    const {
-      username,
-      password
-    } = this.state;
-
-    const loginRequestData = {
-      username,
-      password
-    };
-
-    // Attempt to login
-    this.props.login( loginRequestData );
-    */
+    this.closeModalWithTransition( 1 );
 
   };
 
   render() {
 
-    //show={ this.props.modal.show.includes( "SHOW_MODAL_LOGIN" ) }
-    let result = null;
+    //console.log( "Username is valid => ", this.state.fieldUsernameIsValid );
+    //console.log( "Password is valid => ", this.state.fieldPasswordIsValid );
 
-    const bShowError = this.props.authentication.errors &&
-                       this.props.authentication.errors.length > 0 &&
-                       this.props.authentication.errors[ 0 ].Message;
+    let result = null;
 
     result = (
 
       <div>
 
         <CModal
-          show
+          show={ this.state.showModal }
           onClose={ this.onCloseModal }
           closeOnBackdrop={ false }
+          //backdrop={ false }
+          //size="md"
         >
 
           <CModalHeader closeButton>
@@ -250,7 +340,6 @@ class LoginModal extends Component {
           <CModalBody>
 
             <CForm>
-
               <CFormGroup>
 
                 <CInputGroup>
@@ -259,25 +348,42 @@ class LoginModal extends Component {
 
                     <CInputGroupText>
 
+                      {/*
                       <CIcon name="cil-user" />
+                      */}
+                      <FontAwesomeIcon icon="user" />
 
                     </CInputGroupText>
 
                   </CInputGroupPrepend>
 
                   <CInput
-                    id="Username"
-                    name="Username"
+                    invalid={ this.state.fieldUsernameIsValid === false }
+                    id="username"
+                    name="username"
                     placeholder="Username"
                     autoComplete="name"
                     onChange={ this.onChange }
+                    innerRef={ this.inputUsername }
                   />
 
                 </CInputGroup>
 
+                {
+
+                  this.state.fieldUsernameIsValid === false ? (
+                    <CInvalidFeedback style={ {
+                      display: "block"
+                    } }>
+                      The username field is required
+                    </CInvalidFeedback>
+                  ) : null
+
+                }
+
               </CFormGroup>
 
-              <CFormGroup>
+              <CFormGroup className="mb-0">
 
                 <CInputGroup>
 
@@ -285,88 +391,93 @@ class LoginModal extends Component {
 
                     <CInputGroupText>
 
+                      {/*
                       <CIcon name="cil-asterisk" />
+                      */}
+                      <FontAwesomeIcon icon="asterik" />
 
                     </CInputGroupText>
 
                   </CInputGroupPrepend>
 
                   <CInput
+                    invalid={ this.state.fieldPasswordIsValid === false }
                     type="password"
-                    id="Password"
-                    name="Password"
+                    id="password"
+                    name="password"
                     placeholder="Password"
                     autoComplete="current-password"
                     onChange={ this.onChange }
                   />
 
+                  <CInputGroupAppend>
+
+                    <CInputGroupText>
+
+                      {/*
+                      <CIcon name="cil-user" />
+                      */}
+                      <FontAwesomeIcon icon="asterik" />
+
+                    </CInputGroupText>
+
+                  </CInputGroupAppend>
+
                 </CInputGroup>
+
+                {
+
+                  this.state.fieldPasswordIsValid === false ? (
+                    <CInvalidFeedback style={ {
+                      display: "block"
+                    } }>
+                      The password field is required
+                    </CInvalidFeedback>
+                  ) : null
+
+                }
 
               </CFormGroup>
               {
-                bShowError && (
-                  <CAlert className="mb-0 text-center" color="danger">
-                    {this.props.authentication.errors[ 0 ].Message}
+                this.state.message && (
+                  <CAlert className="mb-0 mt-2 text-center" color={ this.state.isError ? "danger" : "success" }>
+                    {
+                      this.state.message
+                    }
                   </CAlert>
                 )
               }
 
-              {/*
-              <CFormGroup className="form-actions">
-
-                <CButton
-                  type="submit"
-                  //size="sm"
-                  color="success">
-                  Login
-                </CButton>
-
-              </CFormGroup>
-               */}
-
             </CForm>
 
-            {/*
-            {this.state.msg ? (
-              <Alert color="danger">{this.state.msg}</Alert>
-            ) : null}
-            <Form onSubmit={ this.onSubmit }>
-              <FormGroup>
-                <Label for="email">Email</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
-                  className="mb-3"
-                  onChange={ this.onChange }
-                />
-
-                <Label for="password">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
-                  className="mb-3"
-                  onChange={ this.onChange }
-                />
-                <Button
-                  color="dark"
-                  style={ {
-                    marginTop: "2rem"
-                  } }
-                  block>
-                  Login
-                </Button>
-              </FormGroup>
-            </Form>
-            */}
           </CModalBody>
+
           <CModalFooter>
 
-            <CButton color="primary" onClick={ this.onClickButtonLogin }>Login</CButton>
-            <CButton color="secondary" onClick={ this.onClickButtonCancel }>Cancel</CButton>
+            <CButton
+              disabled={ this.state.buttonLoginDisabled }
+              className="ml-2"
+              color="primary"
+              onClick={ this.onClickButtonLogin }
+            >
+              {/*
+              <CIcon
+                name="cil-user"
+                size="lg"
+              />
+              */}
+              <FontAwesomeIcon icon="user" />
+              <span className="ml-2">
+                Login
+              </span>
+            </CButton>
+
+            <CButton
+              disabled={ this.state.buttonCancelDisabled }
+              color="secondary"
+              onClick={ this.onClickButtonCancel }>
+              Cancel
+            </CButton>
 
           </CModalFooter>
 

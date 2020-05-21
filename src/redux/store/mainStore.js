@@ -16,6 +16,6 @@ const mainStore = createStore(
   storeEnhancers( applyMiddleware( thunkMiddleware ) ) //forbiddenWordsMiddleware,
 );
 
-console.log( mainStore.getState() );
+//console.log( mainStore.getState() );
 
 export default mainStore;

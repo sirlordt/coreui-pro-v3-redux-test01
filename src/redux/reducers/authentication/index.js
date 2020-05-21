@@ -6,12 +6,14 @@ import {
   _LOGOUT_SUCCESS,
   _RESET_ACTIVE_USER
 } from "../../constants";
+import SystemUtils from "../../../utils/systemUtils";
 
 const initialState = {
   active: "",
   accounts: {},
-  warnings: [],
-  errors: []
+  transactionId: "",
+  actionType: "",
+  response: {}
 };
 
 /*
@@ -104,17 +106,19 @@ function reducer( state = initialState, action ) {
 
         }
 
-        const strUsername = action.payload.Data[ 0 ].sysUser.Name;
+        const strUsername = action.payload.response.Data[ 0 ].sysUser.Name;
 
-        accounts[ strUsername ] = action.payload.Data[ 0 ]; //Set new field and data or overwrite the old data
+        accounts[ strUsername ] = action.payload.response.Data[ 0 ]; //Set new field and data or overwrite the old data
 
         result = {
 
           ...state, // keep the old state data, spread operator
           active: strUsername,
           accounts,
-          warnings: action.payload.Errors,
-          errors: action.payload.Warnings
+          transactionId: action.payload.transactionId,
+          responseMark: SystemUtils.getUUIDv4(),
+          actionType: action.type,
+          response: action.payload.response
 
         };
 
@@ -127,11 +131,42 @@ function reducer( state = initialState, action ) {
 
         localStorage.setItem( "_ACCOUNTS_DATA", JSON.stringify( AccountsData ) );
 
+        /*
+        if ( action.payload.Callback ) {
+
+          action.payload.Callback( {
+            Code: action.type,
+            Data: action.payload.Response
+          } );
+
+        }
+        */
+
       }
       catch ( error ) {
 
         console.log( error );
-        result = state;
+
+        result = {
+
+          ...state, // keep the old state data, spread operator
+          transactionId: action.payload.transactionId,
+          responseMark: SystemUtils.getUUIDv4(),
+          actionType: "ERROR_IN_REDUCER",
+          response: error
+
+        };
+
+        /*
+        if ( action.payload.Callback ) {
+
+          action.payload.Callback( {
+            Code: "ERROR_IN_REDUCER",
+            Data: error
+          } );
+
+        }
+        */
 
       }
 
@@ -146,16 +181,49 @@ function reducer( state = initialState, action ) {
         result = {
 
           ...state, // keep the old state data, spread operator
-          warnings: action.payload.Warnings,
-          errors: action.payload.Errors
+          transactionId: action.payload.transactionId,
+          responseMark: SystemUtils.getUUIDv4(),
+          actionType: action.type,
+          response: action.payload.response
 
         };
+
+        /*
+        if ( action.payload.Callback ) {
+
+          action.payload.Callback( {
+            Code: action.type,
+            Data: action.payload.Response
+          } );
+
+        }
+        */
 
       }
       catch ( error ) {
 
         console.log( error );
-        result = state;
+
+        result = {
+
+          ...state, // keep the old state data, spread operator
+          transactionId: action.payload.transactionId,
+          responseMark: SystemUtils.getUUIDv4(),
+          actionType: "ERROR_IN_REDUCER",
+          response: error
+
+        };
+
+        /*
+        if ( action.payload.Callback ) {
+
+          action.payload.Callback( {
+            Code: "ERROR_IN_REDUCER",
+            Data: error
+          } );
+
+        }
+        */
 
       }
 
@@ -178,7 +246,7 @@ function reducer( state = initialState, action ) {
 
         if ( accountDetails[ action.payload.Username ] ) {
 
-          accountDetails[ action.payload.Username ].AuthotizationToken = null; //Reset the autorization token
+          accountDetails[ action.payload.Username ].Authotization = null; //Reset the autorization token
 
         }
 
@@ -186,7 +254,11 @@ function reducer( state = initialState, action ) {
 
           ...state, //Keep the old state data, spread operator
           activeUsername: "",
-          accountDetails
+          accountDetails,
+          transactionId: action.payload.transactionId,
+          responseMark: SystemUtils.getUUIDv4(),
+          actionType: action.type,
+          response: action.payload.response
 
         };
 
@@ -194,7 +266,27 @@ function reducer( state = initialState, action ) {
       catch ( error ) {
 
         console.log( error );
-        result = state;
+
+        result = {
+
+          ...state, // keep the old state data, spread operator
+          transactionId: action.payload.transactionId,
+          mark: SystemUtils.getUUIDv4(),
+          actionType: "ERROR_IN_REDUCER",
+          response: error
+
+        };
+
+        /*
+        if ( action.payload.Callback ) {
+
+          action.payload.Callback( {
+            Code: "ERROR_IN_REDUCER",
+            Data: error
+          } );
+
+        }
+        */
 
       }
 
@@ -205,6 +297,20 @@ function reducer( state = initialState, action ) {
     default: {
 
       result = state;
+
+      /*
+      if ( action.payload &&
+           action.payload.Callback ) {
+
+        action.payload.Callback( {
+          Code: "ACTION_TYPE_NOT_FOUND",
+          Data: {
+            Action: action.Type
+          }
+        } );
+
+      }
+      */
 
     }
 

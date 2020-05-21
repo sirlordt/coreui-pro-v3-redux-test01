@@ -5,31 +5,3 @@
 @import './scss/style.scss';
 
 
-.c-footer {
-  background: #fff;
-  //border-bottom: 1px solid #d8dbe0;
-}
-
-/*
-button:focus {
-  outline: none;
-}
-*/
-
-.form-control:focus {
-  color: #5c6873;
-  background-color: #fff;
-  //border-color: #8ad4ee;
-  border-color: gray;
-  outline: 0;
-  box-shadow: none;
-  //box-shadow: 0 0 0 0.2rem gray;
-}
-
-button.close {
-  color: inherit
-}
-
-button.close:hover {
-  color: inherit
-}

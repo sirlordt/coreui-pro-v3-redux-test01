@@ -23,8 +23,10 @@ function login( payload ) {
                                                                            "/backend-server-01" );
 
     const result = await remoteBackendClient.callLogin( headers,
-                                                        payload.Username,
-                                                        payload.Password );
+                                                        payload.username,
+                                                        payload.password );
+
+    //console.log( result );
 
     if ( result &&
          result.output &&
@@ -36,7 +38,11 @@ function login( payload ) {
         dispatch(
           {
             type: _LOGIN_SUCCESS,
-            payload: result.output.body
+            payload: {
+              response: result.output.body,
+              callback: payload.callback,
+              transactionId: payload.transactionId
+            }
           }
         );
 
@@ -46,7 +52,11 @@ function login( payload ) {
         dispatch(
           {
             type: _LOGIN_FAILED,
-            payload: result.output.body
+            payload: {
+              response: result.output.body,
+              callback: payload.callback,
+              transactionId: payload.transactionId
+            }
           }
         );
 
@@ -55,13 +65,27 @@ function login( payload ) {
     }
     else {
 
+      //console.log( "LOGIN_FAILED" );
+
       dispatch(
         {
           type: _LOGIN_FAILED,
           payload: {
-            "StatusCode": 500,
-            "Code": "LOGIN_FAILED",
-            "Message": "No response from server"
+            response: {
+              StatusCode: 500,
+              Code: "NO_RESPONSE_FROM_SERVER",
+              Message: "No response from server",
+              Errors: [
+                {
+                  StatusCode: 500,
+                  Code: "NO_RESPONSE_FROM_SERVER",
+                  Message: "No response from server"
+                }
+              ],
+              Warning: []
+            },
+            callback: payload.callback,
+            transactionId: payload.transactionId
           }
         }
       );

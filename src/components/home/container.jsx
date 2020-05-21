@@ -183,6 +183,8 @@ class Home extends Component {
 
   render() {
 
+    //console.log( "authentication:", this.props.authentication );
+
     let result = null;
 
     // dark theme
@@ -202,14 +204,9 @@ class Home extends Component {
       result = (
 
         <div className={ classes }>
-          <LeftSidebar />
-          {/*
-          <PublicRightSidebar
-            sidebarShow={ this.state.isRightSidebarOpen }
-            toggleSidebar={ this.toggleRightSidebar }
-            getToggleSidebarCallback={ this.getToggleRightSidebarCallback }
-          />
-          */}
+          {
+            this.props.authentication.active ? <LeftSidebar /> : null
+          }
           <div className="c-wrapper">
             <CHeader withSubheader>
               <Suspense fallback={ <Loading /> }>
@@ -246,7 +243,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = ( state ) => {
 
-  console.log( "Header State => ", state );
+  //console.log( "Home State => ", state );
 
   return {
     authentication: state.authentication,
