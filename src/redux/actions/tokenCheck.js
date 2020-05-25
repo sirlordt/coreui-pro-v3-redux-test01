@@ -1,22 +1,21 @@
 import {
-  _LOGIN_SUCCESS,
-  _LOGIN_FAILED
+  _TOKEN_CHECK_SUCCESS,
+  _TOKEN_CHECK_FAILED
 } from "../constants";
 import backendClient from "../../services/backendClient";
 
-function login( payload ) {
+function tokenCheck( payload ) {
 
   return async ( dispatch ) => {
 
-    const result = await backendClient.callLogin( payload.username,
-                                                  payload.password,
-                                                  payload.logger );
+    const result = await backendClient.callTokenCheck( payload.authorization,
+                                                       payload.logger );
 
     if ( result instanceof Error ) {
 
       dispatch(
         {
-          type: _LOGIN_FAILED,
+          type: _TOKEN_CHECK_FAILED,
           payload: {
             response: {
               StatusCode: 400,
@@ -43,11 +42,11 @@ function login( payload ) {
               result.output.body ) {
 
       if ( result.output.body.IsError === false &&
-           result.output.body.Code === "SUCCESS_LOGIN" ) {
+           result.output.body.Code === "SUCCESS_TOKEN_IS_VALID" ) {
 
         dispatch(
           {
-            type: _LOGIN_SUCCESS,
+            type: _TOKEN_CHECK_SUCCESS,
             payload: {
               response: result.output.body,
               callback: payload.callback,
@@ -61,7 +60,7 @@ function login( payload ) {
 
         dispatch(
           {
-            type: _LOGIN_FAILED,
+            type: _TOKEN_CHECK_FAILED,
             payload: {
               response: result.output.body,
               callback: payload.callback,
@@ -77,7 +76,7 @@ function login( payload ) {
 
       dispatch(
         {
-          type: _LOGIN_FAILED,
+          type: _TOKEN_CHECK_FAILED,
           payload: {
             response: {
               StatusCode: 500,
@@ -104,4 +103,4 @@ function login( payload ) {
 
 }
 
-export default login;
+export default tokenCheck;

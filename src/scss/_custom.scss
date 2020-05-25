@@ -81,30 +81,96 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
   right: 0;
   z-index: 4;
-  color: $gray-500__lt;
+  //color: $gray-500__lt;
 
 }
 
+/*
 .btn-show-password:hover,
 .btn-show-password:focus {
 
   color: $gray-700__lt;
 
 }
+*/
 
 .c-dark-theme .btn-show-password {
 
   right: 0;
   z-index: 4;
-  color: $gray-700__lt;
+  //color: $gray-700__lt;
 
 }
 
+/*
 .c-dark-theme .btn-show-password:hover,
 .c-dark-theme .btn-show-password:focus {
 
   color: $gray-500__lt;
 
+}
+*/
+
+.simple-color-gray {
+
+  color: $gray-500__lt !important;
+
+}
+
+.simple-color-gray:hover,
+.simple-color-gray:focus {
+
+  color: $gray-700__lt !important;
+
+}
+
+.c-dark-theme .simple-color-gray {
+
+  color: $gray-700__lt !important;
+
+}
+
+.c-dark-theme .simple-color-gray:hover,
+.c-dark-theme .simple-color-gray:focus {
+
+  color: $gray-500__lt !important;
+
+}
+
+.simple-border-color-gray {
+
+  border-color: $gray-500__lt !important;
+  //border-width: 1px !important;
+  border: solid 1px !important;
+
+}
+
+.simple-border-color-gray:hover,
+.simple-border-color-gray:focus {
+
+  border-color: $gray-700__lt !important;
+
+}
+
+.c-dark-theme .simple-border-color-gray {
+
+  border-color: $gray-700__lt !important;
+
+}
+
+.c-dark-theme .simple-border-color-gray:hover,
+.c-dark-theme .simple-border-color-gray:focus {
+
+  border-color: $gray-500__lt !important;
+
+}
+
+button.close {
+  color: inherit
+}
+
+button.close:hover {
+  color: inherit
 }
 
 /*

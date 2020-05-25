@@ -9,8 +9,8 @@ import {
 } from "react-router-dom";
 
 // Containers
-const Home = React.lazy( () => import( "../home" ) );
-const Login = React.lazy( () => import( "../login" ) );
+const HomePage = React.lazy( () => import( "../home" ) );
+const LoginPage = React.lazy( () => import( "../login" ) );
 
 /*
 const modalPages = [
@@ -22,7 +22,7 @@ const defaultLocation = {
 };
 */
 
-class Root extends Component {
+class RootPage extends Component {
 
   componentDidUpdate() {
 
@@ -103,8 +103,8 @@ class Root extends Component {
           <Route exact path="/404" name="Page 404" render={ ( props ) => <Page404 { ...props } /> } />
           <Route exact path="/500" name="Page 500" render={ ( props ) => <Page500 { ...props } /> } />
           */}
-          <Route exact path="/login" name="Login Page" render={ ( props ) => <Login { ...props } /> } />
-          <Route exact path="/home" name="Home Page" render={ ( props ) => <Home { ...props } /> } />
+          <Route exact path="/login" name="Login Page" render={ ( props ) => <LoginPage { ...props } /> } />
+          <Route exact path="/home" name="Home Page" render={ ( props ) => <HomePage { ...props } /> } />
           <Redirect from="/" to="/home" />
 
         </Switch>
@@ -124,4 +124,4 @@ class Root extends Component {
 
 }
 
-export default withRouter( Root );
+export default withRouter( RootPage );

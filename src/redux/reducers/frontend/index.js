@@ -1,6 +1,6 @@
 import {
-  _INIT_LOCAL_STATE,
-  _SAVE_LOCAL_STATE,
+  //_INIT_LOCAL_STATE,
+  //_SAVE_LOCAL_STATE,
   _TOGGLE_DARK,
   _TOGGLE_LEFT_SIDERBAR,
   _TOGGLE_LEFT_SIDERBAR_MOBILE,
@@ -9,6 +9,9 @@ import {
   _TOGGLE_RIGHT_SIDERBAR
 } from "../../constants";
 
+import initialState from "../initialState";
+
+/*
 const initialState = {
   themeDark: false,
   language: "en_US",
@@ -19,13 +22,15 @@ const initialState = {
   sidebarDisplay: "sm",
   isRightSidebarOpen: false
 };
+*/
 
-function reducer( state = initialState, action ) {
+function reducer( state = initialState.frontend, action ) {
 
   let result = null;
 
   switch ( action.type ) {
 
+    /*
     case _INIT_LOCAL_STATE: {
 
       try {
@@ -75,6 +80,7 @@ function reducer( state = initialState, action ) {
       break;
 
     }
+    */
 
     case _TOGGLE_DARK: {
 

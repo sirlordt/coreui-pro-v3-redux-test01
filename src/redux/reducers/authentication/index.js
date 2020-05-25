@@ -1,20 +1,23 @@
 import {
+  cloneDeep
+} from "lodash";
+
+import {
+  _ERROR_IN_REDUCER,
+  _DELETE_RESULT,
   //_INIT_LOCAL_STATE,
   //_SAVE_LOCAL_STATE,
   _LOGIN_SUCCESS,
   _LOGIN_FAILED,
+  _TOKEN_CHECK_SUCCESS,
+  _TOKEN_CHECK_FAILED,
   _LOGOUT_SUCCESS,
-  _RESET_ACTIVE_USER
+  _RESET_ACTIVE_USER,
+  _LOGOUT_FAILED
 } from "../../constants";
 import SystemUtils from "../../../utils/systemUtils";
 
-const initialState = {
-  active: "",
-  accounts: {},
-  transactionId: "",
-  actionType: "",
-  response: {}
-};
+import initialState from "../initialState";
 
 /*
   {
@@ -38,7 +41,7 @@ const initialState = {
   }
 */
 
-function reducer( state = initialState, action ) {
+function reducer( state = initialState.authentication, action ) {
 
   let result = null;
 
@@ -94,11 +97,49 @@ function reducer( state = initialState, action ) {
     }
     */
 
+    case _DELETE_RESULT: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        if ( result.results &&
+             result.results[ action.payload.transactionId ] ) {
+
+          delete result.results[ action.payload.transactionId ];
+
+        }
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          responseMark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
     case _LOGIN_SUCCESS: {
 
       try {
 
-        let accounts = state.accounts;
+        result = cloneDeep( state );
+
+        let accounts = result.accounts;
 
         if ( !accounts ) {
 
@@ -110,16 +151,20 @@ function reducer( state = initialState, action ) {
 
         accounts[ strUsername ] = action.payload.response.Data[ 0 ]; //Set new field and data or overwrite the old data
 
-        result = {
+        result.active = strUsername;
+        result.lastCheck = "";
+        result.accounts = accounts;
 
-          ...state, // keep the old state data, spread operator
-          active: strUsername,
-          accounts,
-          transactionId: action.payload.transactionId,
-          responseMark: SystemUtils.getUUIDv4(),
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
           actionType: action.type,
-          response: action.payload.response
-
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
         };
 
         const AccountsData = {
@@ -131,42 +176,22 @@ function reducer( state = initialState, action ) {
 
         localStorage.setItem( "_ACCOUNTS_DATA", JSON.stringify( AccountsData ) );
 
-        /*
-        if ( action.payload.Callback ) {
-
-          action.payload.Callback( {
-            Code: action.type,
-            Data: action.payload.Response
-          } );
-
-        }
-        */
-
       }
       catch ( error ) {
 
-        console.log( error );
+        result = cloneDeep( state );
 
-        result = {
+        if ( !result.results ) {
 
-          ...state, // keep the old state data, spread operator
-          transactionId: action.payload.transactionId,
-          responseMark: SystemUtils.getUUIDv4(),
-          actionType: "ERROR_IN_REDUCER",
-          response: error
-
-        };
-
-        /*
-        if ( action.payload.Callback ) {
-
-          action.payload.Callback( {
-            Code: "ERROR_IN_REDUCER",
-            Data: error
-          } );
+          result.results = {};
 
         }
-        */
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
 
       }
 
@@ -178,52 +203,36 @@ function reducer( state = initialState, action ) {
 
       try {
 
-        result = {
+        result = cloneDeep( state );
 
-          ...state, // keep the old state data, spread operator
-          transactionId: action.payload.transactionId,
-          responseMark: SystemUtils.getUUIDv4(),
-          actionType: action.type,
-          response: action.payload.response
+        if ( !result.results ) {
 
-        };
-
-        /*
-        if ( action.payload.Callback ) {
-
-          action.payload.Callback( {
-            Code: action.type,
-            Data: action.payload.Response
-          } );
+          result.results = {};
 
         }
-        */
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
+        };
 
       }
       catch ( error ) {
 
-        console.log( error );
+        result = cloneDeep( state );
 
-        result = {
+        if ( !result.results ) {
 
-          ...state, // keep the old state data, spread operator
-          transactionId: action.payload.transactionId,
-          responseMark: SystemUtils.getUUIDv4(),
-          actionType: "ERROR_IN_REDUCER",
-          response: error
-
-        };
-
-        /*
-        if ( action.payload.Callback ) {
-
-          action.payload.Callback( {
-            Code: "ERROR_IN_REDUCER",
-            Data: error
-          } );
+          result.results = {};
 
         }
-        */
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
 
       }
 
@@ -236,57 +245,181 @@ function reducer( state = initialState, action ) {
 
       try {
 
-        let accountDetails = state.accountDetails;
+        result = cloneDeep( state );
 
-        if ( !accountDetails ) {
+        let accounts = result.accounts;
 
-          accountDetails = {};// Init the object in case of null
+        if ( !accounts ) {
 
-        }
-
-        if ( accountDetails[ action.payload.Username ] ) {
-
-          accountDetails[ action.payload.Username ].Authotization = null; //Reset the autorization token
+          accounts = {};// Init the object in case of null
 
         }
 
-        result = {
+        if ( accounts[ action.payload.username ] ) {
 
-          ...state, //Keep the old state data, spread operator
-          activeUsername: "",
-          accountDetails,
-          transactionId: action.payload.transactionId,
-          responseMark: SystemUtils.getUUIDv4(),
+          accounts[ action.payload.username ].Authotization = null; //Reset the autorization token
+
+        }
+
+        result.active = "";
+        result.lastCheck = "";
+        result.accounts = accounts;
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
           actionType: action.type,
-          response: action.payload.response
-
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response || {}
         };
 
       }
       catch ( error ) {
 
-        console.log( error );
+        result = cloneDeep( state );
 
-        result = {
+        if ( !result.results ) {
 
-          ...state, // keep the old state data, spread operator
-          transactionId: action.payload.transactionId,
-          mark: SystemUtils.getUUIDv4(),
-          actionType: "ERROR_IN_REDUCER",
-          response: error
-
-        };
-
-        /*
-        if ( action.payload.Callback ) {
-
-          action.payload.Callback( {
-            Code: "ERROR_IN_REDUCER",
-            Data: error
-          } );
+          result.results = {};
 
         }
-        */
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _LOGOUT_FAILED: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
+        };
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _TOKEN_CHECK_SUCCESS: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        result.lastCheck = SystemUtils.getCurrentDateAndTime();
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
+        };
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _TOKEN_CHECK_FAILED: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        //result.lastCheck = "";
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
+        };
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
 
       }
 
@@ -297,20 +430,6 @@ function reducer( state = initialState, action ) {
     default: {
 
       result = state;
-
-      /*
-      if ( action.payload &&
-           action.payload.Callback ) {
-
-        action.payload.Callback( {
-          Code: "ACTION_TYPE_NOT_FOUND",
-          Data: {
-            Action: action.Type
-          }
-        } );
-
-      }
-      */
 
     }
 

@@ -17,7 +17,10 @@ import {
   faArrowAltCircleLeft,
   faHome,
   faEye,
-  faEyeSlash
+  faEyeSlash,
+  faLanguage,
+  faTimes,
+  faSync
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -48,4 +51,7 @@ library.add( faCheckSquare,
              faGoogle,
              faCalendar,
              faEye,
-             faEyeSlash );
+             faEyeSlash,
+             faLanguage,
+             faTimes,
+             faSync );

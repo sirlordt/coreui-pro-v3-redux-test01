@@ -28,7 +28,7 @@
      "no-else-return": "off",
      "no-plusplus": "off",
      "no-await-in-loop": "off",
-     "indent": [ "error", 2, { "ignoredNodes": [ "ExportDeclaration" ], "FunctionDeclaration": {"parameters": "first"} , "CallExpression": {"arguments": "first"}, "SwitchCase": 1 } ],
+     "indent": [ "error", 2, { "ignoredNodes": [ "ExportDeclaration" ], "FunctionExpression": {"parameters": "first"} , "CallExpression": {"arguments": "first"}, "SwitchCase": 1 } ],
      "no-console": "off",
      "react/destructuring-assignment": "off",
      "react/prefer-stateless-function": "off",
@@ -57,6 +57,7 @@
      "no-useless-constructor": "off",
      "react/jsx-fragments": [ 0 ],
      "react/jsx-closing-bracket-location": [ 0 ],
-     "lines-between-class-members": "off"
+     "lines-between-class-members": "off",
+     "react/no-did-update-set-state1": "off"
    }
 }

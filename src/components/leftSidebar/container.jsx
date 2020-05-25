@@ -35,19 +35,21 @@ import {
 
 class LeftSidebar extends Component {
 
+  /*
   constructor( props ) {
 
     super( props );
 
-    /*
+    / *
     this.state = {
       minimize: props.sidebarMinimize
     };
 
     this.lastSidebarMinimize = props.sidebarMinimize;
-    */
+    * /
 
   }
+  */
 
   render() {
 

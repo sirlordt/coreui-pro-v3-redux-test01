@@ -16,7 +16,7 @@ import Loading from "./components/loading";
 // Containers
 //const Home = React.lazy( () => import( "./components/home" ) );
 //const LoginModal = React.lazy( () => import( "./components/loginModal" ) );
-const Root = React.lazy( () => import( "./components/root" ) );
+const RootPage = React.lazy( () => import( "./pages/root" ) );
 
 function App() {
 
@@ -24,7 +24,7 @@ function App() {
     <Provider store={ mainStore }>
       <HashRouter>
         <React.Suspense fallback={ <Loading /> }>
-          <Root />
+          <RootPage />
         </React.Suspense>
       </HashRouter>
     </Provider>

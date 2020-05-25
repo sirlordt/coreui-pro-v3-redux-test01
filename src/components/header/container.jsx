@@ -42,8 +42,11 @@ import {
   toggleDark,
   toggleLeftSidebar,
   toggleLeftSidebarMobile,
-  toggleRightSidebar
+  toggleRightSidebar,
+  tokenCheck,
+  logout
 } from "../../redux/actions";
+import SystemUtils from "../../utils/systemUtils";
 
 //const LoginModal = React.lazy( () => import( "../loginModal" ) );
 
@@ -54,6 +57,121 @@ const propTypes = {
 const defaultProps = {};
 
 class Header extends Component {
+
+  constructor( props ) {
+
+    super( props );
+
+    this.state = {
+
+      id: SystemUtils.getUUIDv4(),
+      isAuthenticated: false
+
+    };
+
+  }
+
+  shouldComponentUpdate( nextProps ) {
+
+    if ( this.props.authentication.active !== nextProps.authentication.active ) {
+
+      this.setState(
+        {
+          isAuthenticated: !!( nextProps.authentication.active && nextProps.authentication.active !== "" )
+        }
+      );
+
+    }
+
+    /*
+    if ( this.props.authentication.results[ this.state.id ]?.mark !== nextProps.authentication.results[ this.state.id ]?.mark ) {
+
+      const strCode = nextProps.authentication.results[ this.state.id ].data.Code;
+      const strMessage = nextProps.authentication.results[ this.state.id ].data.Message;
+
+      if ( strCode === "NO_RESPONSE_FROM_SERVER" ) {
+
+        this.setState( {
+          isError: true,
+          message: strMessage
+        } );
+
+      }
+      else if ( strCode === "SUCCESS_TOKEN_IS_VALID" ) {
+
+        this.setState( {
+          isAuthenticated: true,
+          isError: false,
+          message: strMessage
+        } );
+
+      }
+      else {
+
+        this.setState( {
+          isAuthenticated: false,
+          isError: true,
+          message: strMessage
+        } );
+
+      }
+
+    }
+    */
+
+    return true;
+
+  }
+
+  async componentDidMount() {
+
+    this.setState(
+      {
+        isAuthenticated: !!( this.props.authentication.active && this.props.authentication.active !== "" )
+      }
+    );
+
+    /*
+    const intTokenCheck = SystemUtils.tokenCheckStatus( this.props.authentication );
+
+    if ( intTokenCheck === 0 ) {
+
+      this.setState( {
+        isAuthenticated: false,
+        isError: false,
+        message: ""
+      } );
+
+    }
+    else if ( intTokenCheck === 1 ) {
+
+      //Launch token check
+      this.props.tokenCheck( {
+        transactionId: this.state.id,
+        authorization: this.props.authentication.accounts[ this.props.authentication.active ].Authorization,
+        logger: null
+      } );
+
+    }
+    else if ( intTokenCheck === 2 ) {
+
+      this.setState( {
+        isAuthenticated: true,
+        isError: false,
+        message: ""
+      } );
+
+    }
+    else if ( intTokenCheck === -1 ) {
+
+      this.props.resetActiveUser( {
+        username: this.props.authentication.active
+      } );
+
+    }
+    */
+
+  }
 
   render() {
 
@@ -76,7 +194,7 @@ class Header extends Component {
 
         {
 
-          this.props.authentication.active ? (
+          this.state.isAuthenticated ? (
             <React.Fragment>
               <CToggler
                 inHeader
@@ -95,7 +213,7 @@ class Header extends Component {
 
         {
 
-          !this.props.authentication.active ? (
+          !this.state.isAuthenticated ? (
             <React.Fragment>
 
               <CHeaderBrand className="ml-2" to="/home">
@@ -131,7 +249,7 @@ class Header extends Component {
 
           {
 
-            !this.props.authentication.active ? (
+            !this.state.isAuthenticated ? (
 
               <React.Fragment>
 
@@ -267,7 +385,9 @@ const mapDispatchToProps = {
   toggleDark,
   toggleLeftSidebar,
   toggleLeftSidebarMobile,
-  toggleRightSidebar
+  toggleRightSidebar,
+  tokenCheck,
+  logout
 };
 
 const mapStateToProps = ( state ) => {

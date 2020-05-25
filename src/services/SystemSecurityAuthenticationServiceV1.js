@@ -1,30 +1,18 @@
+import CommonUtilities from "../utils/commonUtilities";
+
+const debug = require( "debug" )( "SystemSecurityAuthenticationServiceV1" );
 
 class SystemSecurityAuthenticationServiceV1 {
 
-  strProtocol = "";
-  // eslint-disable-next-line lines-between-class-members
-  strHost = "";
-  intPort = 9090;
-  strRootPath = "";
-
-  constructor( strProtocol,
-    strHost,
-    intPort,
-    strRootPath ) {
-
-    this.strProtocol = strProtocol;
-    this.strHost = strHost;
-    this.intPort = intPort;
-    this.strRootPath = strRootPath;
-
-  }
-
-  async callLogin( headers,
-    strUsername,
-    strPassword ) {
+  static async callLogin( backend,
+                          headers,
+                          strUsername,
+                          strPassword,
+                          logger ) {
 
     const result = {
-      input: null, output: null
+      input: null,
+      output: null
     };
 
     try {
@@ -40,11 +28,11 @@ class SystemSecurityAuthenticationServiceV1 {
         body: JSON.stringify( body )
       };
 
-      let strRequestPath = `${this.strProtocol + this.strHost}:${this.intPort}${this.strRootPath}`;
+      let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
 
-      strRequestPath += "/v1/system/security/authentication/login";
+      strRequestURI += "/v1/system/security/authentication/login";
 
-      const callResult = await fetch( strRequestPath,
+      const callResult = await fetch( strRequestURI,
                                       options );
 
       result.output = callResult ? {
@@ -67,7 +55,161 @@ class SystemSecurityAuthenticationServiceV1 {
     }
     catch ( error ) {
 
-      console.log( error );
+      const sourcePosition = CommonUtilities.getSourceCodePosition( 1 );
+
+      sourcePosition.method = `${this.name}.${SystemSecurityAuthenticationServiceV1.callLogin.name}`;
+
+      const strMark = "1DFC6EF03869";
+
+      const debugMark = debug.extend( strMark );
+
+      debugMark( "Error message: [%s]", error.message ? error.message : "No error message available" );
+      debugMark( "Catched on: %O", sourcePosition );
+
+      error.mark = strMark;
+
+      if ( logger && typeof logger.error === "function" ) {
+
+        error.catchedOn = sourcePosition;
+        logger.error( error );
+
+      }
+
+    }
+
+    return result;
+
+  }
+
+  static async callTokenCheck( backend,
+                               headers,
+                               logger ) {
+
+    const result = {
+      input: null,
+      output: null
+    };
+
+    try {
+
+      const options = {
+        method: "POST",
+        headers,
+        body: null //JSON.stringify( body ),
+      };
+
+      let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
+
+      strRequestURI += "/v1/system/security/authentication/token/check";
+
+      const callResult = await fetch( strRequestURI,
+                                      options );
+
+      result.output = callResult ? {
+        status: callResult.status,
+        statusText: callResult.statusText,
+        body: await callResult.json()
+      } :
+        {
+          status: null,
+          statusText: null,
+          body: {
+            Code: ""
+          }
+        };
+
+      result.input = options;
+
+    }
+    catch ( error ) {
+
+      const sourcePosition = CommonUtilities.getSourceCodePosition( 1 );
+
+      sourcePosition.method = `${this.name}.${SystemSecurityAuthenticationServiceV1.callTokenCheck.name}`;
+
+      const strMark = "DD5EBFB4BDEE";
+
+      const debugMark = debug.extend( strMark );
+
+      debugMark( "Error message: [%s]", error.message ? error.message : "No error message available" );
+      debugMark( "Catched on: %O", sourcePosition );
+
+      error.mark = strMark;
+
+      if ( logger && typeof logger.error === "function" ) {
+
+        error.catchedOn = sourcePosition;
+        logger.error( error );
+
+      }
+
+    }
+
+    return result;
+
+  }
+
+  static async callLogout( backend,
+                           headers,
+                           logger ) {
+
+    const result = {
+      input: null,
+      output: null
+    };
+
+    try {
+
+      const options = {
+        method: "POST",
+        headers,
+        body: null //JSON.stringify( body ),
+      };
+
+      let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
+
+      strRequestURI += "/v1/system/security/authentication/logout";
+
+      const callResult = await fetch( strRequestURI,
+                                      options );
+
+      result.output = callResult ? {
+        status: callResult.status,
+        statusText: callResult.statusText,
+        body: await callResult.json()
+      } :
+        {
+          status: null,
+          statusText: null,
+          body: {
+            Code: ""
+          }
+        };
+
+      result.input = options;
+
+    }
+    catch ( error ) {
+
+      const sourcePosition = CommonUtilities.getSourceCodePosition( 1 );
+
+      sourcePosition.method = `${this.name}.${SystemSecurityAuthenticationServiceV1.callLogout.name}`;
+
+      const strMark = "88DD50269849";
+
+      const debugMark = debug.extend( strMark );
+
+      debugMark( "Error message: [%s]", error.message ? error.message : "No error message available" );
+      debugMark( "Catched on: %O", sourcePosition );
+
+      error.mark = strMark;
+
+      if ( logger && typeof logger.error === "function" ) {
+
+        error.catchedOn = sourcePosition;
+        logger.error( error );
+
+      }
 
     }
 

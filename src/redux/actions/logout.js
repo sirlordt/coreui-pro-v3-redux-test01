@@ -1,22 +1,21 @@
 import {
-  _LOGIN_SUCCESS,
-  _LOGIN_FAILED
+  _LOGOUT_SUCCESS,
+  _LOGOUT_FAILED
 } from "../constants";
 import backendClient from "../../services/backendClient";
 
-function login( payload ) {
+function logout( payload ) {
 
   return async ( dispatch ) => {
 
-    const result = await backendClient.callLogin( payload.username,
-                                                  payload.password,
-                                                  payload.logger );
+    const result = await backendClient.callLogout( payload.autorization,
+                                                   payload.logger );
 
     if ( result instanceof Error ) {
 
       dispatch(
         {
-          type: _LOGIN_FAILED,
+          type: _LOGOUT_FAILED,
           payload: {
             response: {
               StatusCode: 400,
@@ -43,12 +42,13 @@ function login( payload ) {
               result.output.body ) {
 
       if ( result.output.body.IsError === false &&
-           result.output.body.Code === "SUCCESS_LOGIN" ) {
+           result.output.body.Code === "SUCCESS_LOGOUT" ) {
 
         dispatch(
           {
-            type: _LOGIN_SUCCESS,
+            type: _LOGOUT_SUCCESS,
             payload: {
+              username: payload.username,
               response: result.output.body,
               callback: payload.callback,
               transactionId: payload.transactionId
@@ -61,7 +61,7 @@ function login( payload ) {
 
         dispatch(
           {
-            type: _LOGIN_FAILED,
+            type: _LOGOUT_FAILED,
             payload: {
               response: result.output.body,
               callback: payload.callback,
@@ -77,7 +77,7 @@ function login( payload ) {
 
       dispatch(
         {
-          type: _LOGIN_FAILED,
+          type: _LOGOUT_FAILED,
           payload: {
             response: {
               StatusCode: 500,
@@ -104,4 +104,4 @@ function login( payload ) {
 
 }
 
-export default login;
+export default logout;
