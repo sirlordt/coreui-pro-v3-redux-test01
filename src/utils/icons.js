@@ -20,7 +20,8 @@ import {
   faEyeSlash,
   faLanguage,
   faTimes,
-  faSync
+  faSync,
+  faCheck
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
@@ -54,4 +55,5 @@ library.add( faCheckSquare,
              faEyeSlash,
              faLanguage,
              faTimes,
-             faSync );
+             faSync,
+             faCheck );

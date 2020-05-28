@@ -25,23 +25,19 @@ import {
   CInputGroupText,
   CRow
 } from "@coreui/react";
-/*
-import {
-  CIcon
-} from "@coreui/icons-react";
-*/
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
 import PropTypes from "prop-types";
 import {
-  login
+  login,
+  showModalMessage
 } from "../../redux/actions";
 
 import SystemUtils from "../../utils/systemUtils";
 
 import logo from "../../assets/img/brand/coreui-pro-base.svg";
-import MessageModal from "../../modals/message/container";
+//import MessageModal from "../../modals/message/container";
 
 const propTypes = {
   children: PropTypes.node
@@ -65,10 +61,13 @@ class LoginPage extends Component {
       password: "",
       fieldPasswordMessage: "",
       fieldPasswordShowContent: false,
-      isError: false,
+      //isError: false,
+      /*
+      messageKind: "",
+      title: "",
       message: "",
-      buttonLoginDisabled: false,
-      buttonCancelDisabled: false
+      */
+      buttonLoginDisabled: false
 
     };
 
@@ -106,39 +105,54 @@ class LoginPage extends Component {
 
       if ( strCode === "NO_RESPONSE_FROM_SERVER" ) {
 
-        this.setState( {
-          isError: true,
-          message: strMessage
+        this.props.showModalMessage( {
+          modalId: this.state.id,
+          modalCode: "NOTIFICATION",
+          modalTitle: "No response from server",
+          modalMessage: strMessage,
+          modalCallback: this.onClickButtonCloseModalCallback
         } );
 
-      }
-      else if ( strCode === "SUCCESS_LOGIN" ) {
-
-        this.props.history.push( "/home" );
         /*
         this.setState( {
-          isError: false,
-          message: strMessage
+          messageKind: "notification",
+          title: "No response from server",
+          message: strMessage,
+          buttonLoginDisabled: false
         } );
         */
 
       }
+      else if ( strCode === "SUCCESS_LOGIN" ) {
+
+        this.props.history.replace( {
+          pathname: "/home"
+        } );
+
+      }
       else {
 
-        this.setState( {
-          isError: true,
-          message: strMessage,
-          buttonLoginDisabled: false,
-          buttonCancelDisabled: false
+        this.props.showModalMessage( {
+          modalId: this.state.id,
+          modalCode: "NOTIFICATION",
+          modalTitle: "Error",
+          modalMessage: strMessage
         } );
+
+        /*
+        this.setState( {
+          messageKind: "notification",
+          title: "Error",
+          message: strMessage,
+          buttonLoginDisabled: false
+        } );
+        */
 
       }
 
     }
 
-    //return bResult;
-
-    return this;
+    return true;
 
   }
 
@@ -215,7 +229,8 @@ class LoginPage extends Component {
         fieldUsernameInvalid: false,
         fieldUsernameMessage: "",
         fieldPasswordInvalid: false,
-        fieldPasswordMessage: ""
+        fieldPasswordMessage: "",
+        buttonLoginDisabled: true
       } );
 
       this.props.login( {
@@ -228,13 +243,23 @@ class LoginPage extends Component {
 
   }
 
-  onClickButtonCloseModal = ( event ) => {
+  onClickButtonCloseModalCallback = ( event ) => {
 
     event && event.preventDefault();
 
+    /*
+
     this.setState( {
-      isError: false,
+      messageKind: "",
+      title: "",
       message: ""
+    } );
+    */
+
+    this.setState( {
+
+      buttonLoginDisabled: false
+
     } );
 
   }
@@ -285,6 +310,8 @@ class LoginPage extends Component {
 
   render() {
 
+    //const showMessage = !!( this.state.messageKind && this.state.title && this.state.message );
+
     // dark theme
     const classes = classNames(
       "c-app c-default-layout flex-row align-items-start pt-3",
@@ -292,7 +319,32 @@ class LoginPage extends Component {
       //this.state.themeDark ? "c-dark-theme" : false
     );
 
+    /*
+    let buttons = null;
+
+    if ( this.state.messageKind === "notification" ) {
+
+      buttons = (
+
+        <CButton
+          //disabled={ this.state.buttonLoginDisabled }
+          className="ml-2 box-shadow-none"
+          color="primary"
+          onClick={ this.onClickButtonCloseModal }
+        >
+          <FontAwesomeIcon icon="times" />
+          <span className="ml-2">
+            Close
+          </span>
+        </CButton>
+
+      );
+
+    }
+    */
+
     return (
+
       <div className={ classes }>
         <CContainer>
           <CRow className="justify-content-center">
@@ -392,6 +444,7 @@ class LoginPage extends Component {
                       <CFormGroup className="mb-2">
                         <CButton
                           id="buttonLogin"
+                          disabled={ this.state.buttonLoginDisabled }
                           className="w-100 box-shadow-none"
                           color="primary"
                           onClick={ this.onClickButtonLogin }>
@@ -471,13 +524,16 @@ class LoginPage extends Component {
             </CCol>
           </CRow>
         </CContainer>
+        {/*
         <MessageModal
-          showMe={ !!( this.state.isError && this.state.message ) }
-          title="Error"
+          showMe={ showMessage }
+          title={ this.state.title }
           message={ this.state.message }
-          onClickButtonClose={ this.onClickButtonCloseModal }
+          buttons={ buttons }
         />
+        */}
       </div>
+
     );
 
   }
@@ -488,7 +544,8 @@ LoginPage.propTypes = propTypes;
 LoginPage.defaultProps = defaultProps;
 
 const mapDispatchToProps = {
-  login
+  login,
+  showModalMessage
 };
 
 const mapStateToProps = ( state ) => {

@@ -12,6 +12,9 @@ import login from "./login";
 import tokenCheck from "./tokenCheck";
 import logout from "./logout";
 import resetActiveUser from "./resetActiveUser";
+import deleteResult from "./deleteResult";
+import showModalMessage from "./showModalMessage";
+import closeModalMessage from "./closeModalMessage";
 
 export {
   initAccountState,
@@ -25,5 +28,8 @@ export {
   login,
   tokenCheck,
   logout,
-  resetActiveUser
+  resetActiveUser,
+  deleteResult,
+  showModalMessage,
+  closeModalMessage
 };

@@ -31,7 +31,7 @@ import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
 // routes config
-//import routes from '../../routes';
+import routes from "../../routes";
 
 //import PublicHeaderDropdown from "../headerDropdown";
 
@@ -44,9 +44,12 @@ import {
   toggleLeftSidebarMobile,
   toggleRightSidebar,
   tokenCheck,
-  logout
+  logout,
+  showModalMessage,
+  closeModalMessage
 } from "../../redux/actions";
 import SystemUtils from "../../utils/systemUtils";
+//import MessageModal from "../../modals/message/container";
 
 //const LoginModal = React.lazy( () => import( "../loginModal" ) );
 
@@ -64,8 +67,13 @@ class Header extends Component {
 
     this.state = {
 
-      id: SystemUtils.getUUIDv4(),
-      isAuthenticated: false
+      id: SystemUtils.getUUIDv4()
+      //isAuthenticated: false,
+      /*
+      modalCode: "",
+      title: "",
+      message: ""
+      */
 
     };
 
@@ -73,17 +81,6 @@ class Header extends Component {
 
   shouldComponentUpdate( nextProps ) {
 
-    if ( this.props.authentication.active !== nextProps.authentication.active ) {
-
-      this.setState(
-        {
-          isAuthenticated: !!( nextProps.authentication.active && nextProps.authentication.active !== "" )
-        }
-      );
-
-    }
-
-    /*
     if ( this.props.authentication.results[ this.state.id ]?.mark !== nextProps.authentication.results[ this.state.id ]?.mark ) {
 
       const strCode = nextProps.authentication.results[ this.state.id ].data.Code;
@@ -91,33 +88,66 @@ class Header extends Component {
 
       if ( strCode === "NO_RESPONSE_FROM_SERVER" ) {
 
+        /*
         this.setState( {
-          isError: true,
+          modalCode: "NOTIFICATION",
+          title: "No response from server",
           message: strMessage
+        } );
+        */
+
+        this.props.showModalMessage( {
+          modalId: this.state.id,
+          modalCode: "NO_RESPONSE_FROM_SERVER",
+          modalTitle: "No response from server",
+          modalMessage: strMessage,
+          modalTag: "forceCheckToken"
+        } );
+
+
+      }
+      else if ( strCode === "SUCCESS_LOGOUT" ) {
+
+        /*
+        this.setState( {
+          modalCode: "NOTIFICATION",
+          title: "Success logout",
+          message: strMessage
+        } );
+        */
+
+        this.props.showModalMessage( {
+          modalId: this.state.id,
+          modalCode: "NOTIFICATION",
+          modalTitle: "Success logout",
+          modalMessage: strMessage
+        } );
+
+        this.props.history.replace( {
+          pathname: "/home"
         } );
 
       }
-      else if ( strCode === "SUCCESS_TOKEN_IS_VALID" ) {
+      else { //Other errors
 
-        this.setState( {
-          isAuthenticated: true,
-          isError: false,
-          message: strMessage
+        this.props.showModalMessage( {
+          modalId: this.state.id,
+          modalCode: "NOTIFICATION",
+          modalTitle: "Error",
+          modalMessage: strMessage
         } );
 
-      }
-      else {
-
+        /*
         this.setState( {
-          isAuthenticated: false,
-          isError: true,
+          modalCode: "NOTIFICATION",
+          title: "Error",
           message: strMessage
         } );
+        */
 
       }
 
     }
-    */
 
     return true;
 
@@ -125,68 +155,151 @@ class Header extends Component {
 
   async componentDidMount() {
 
-    this.setState(
-      {
-        isAuthenticated: !!( this.props.authentication.active && this.props.authentication.active !== "" )
-      }
-    );
+    //
+
+  }
+
+  onClickButtonLogout = ( event ) => {
+
+    event && event.preventDefault();
 
     /*
-    const intTokenCheck = SystemUtils.tokenCheckStatus( this.props.authentication );
+    const buttons = (
 
-    if ( intTokenCheck === 0 ) {
+      <React.Fragment>
 
-      this.setState( {
-        isAuthenticated: false,
-        isError: false,
-        message: ""
-      } );
+        <CButton
+          className="ml-2 box-shadow-none"
+          onClick={ this.onClickButtonLogoutModalYes }
+        >
+          <FontAwesomeIcon icon="check" />
+          <span className="ml-2">
+            Yes
+          </span>
+        </CButton>
 
-    }
-    else if ( intTokenCheck === 1 ) {
+        <CButton
+          className="ml-2 box-shadow-none"
+          color="primary"
+          onClick={ this.onClickButtonModalClose }
+        >
+          <FontAwesomeIcon icon="times" />
+          <span className="ml-2">
+            No
+          </span>
+        </CButton>
 
-      //Launch token check
-      this.props.tokenCheck( {
-        transactionId: this.state.id,
-        authorization: this.props.authentication.accounts[ this.props.authentication.active ].Authorization,
-        logger: null
-      } );
+      </React.Fragment>
 
-    }
-    else if ( intTokenCheck === 2 ) {
+    );
+    */
 
-      this.setState( {
-        isAuthenticated: true,
-        isError: false,
-        message: ""
-      } );
+    this.props.showModalMessage( {
+      modalId: this.state.id,
+      modalCode: "LOGOUT_QUESTION",
+      modalTitle: "Logout",
+      modalMessage: "Are you sure do you want logout?"
+      //modalButtons: buttons
+    } );
 
-    }
-    else if ( intTokenCheck === -1 ) {
-
-      this.props.resetActiveUser( {
-        username: this.props.authentication.active
-      } );
-
-    }
+    /*
+    this.setState( {
+      showMessage: true,
+      modalCode: "LOGOUT_QUESTION",
+      title: "Logout",
+      message: "Are you sure do you want logout?"
+    } );
     */
 
   }
 
+  /*
+  onClickButtonLogoutModalYes = ( event ) => {
+
+    event && event.preventDefault();
+
+    const strUsername = this.props.authentication.active;
+    const strAutorization = this.props.authentication.accounts[ this.props.authentication.active ].Authorization;
+
+    this.props.logout( {
+      transactionId: this.state.id,
+      username: strUsername,
+      authorization: strAutorization
+    } );
+
+  }
+
+  onClickButtonModalClose = ( event ) => {
+
+    event && event.preventDefault();
+
+    this.props.closeModalMessage( {
+      transactionId: this.state.id
+    } );
+
+  }
+  */
+
   render() {
 
+    const isAuthenticated = !!( this.props.authentication.active );
+
     /*
-    const {
-      //toggleTheme,
-      //toggleLeftSidebarMobile,
-      //toggleLeftSidebar,
-      //toggleRightSidebar
-    } = this.props;
+    const showMessage = !!( this.state.modalCode && this.state.title && this.state.message );
+
+    let buttons = null;
+
+    if ( this.state.modalCode === "NOTIFICATION" ) {
+
+      buttons = (
+
+        <CButton
+          className="ml-2 box-shadow-none"
+          color="primary"
+          onClick={ this.onClickButtonModalClose }
+        >
+          <FontAwesomeIcon icon="times" />
+          <span className="ml-2">
+            Close
+          </span>
+        </CButton>
+
+      );
+
+    }
+    else if ( this.state.modalCode === "LOGOUT_QUESTION" ) {
+
+      buttons = (
+
+        <React.Fragment>
+
+          <CButton
+            className="ml-2 box-shadow-none"
+            onClick={ this.onClickButtonLogoutModalYes }
+          >
+            <FontAwesomeIcon icon="check" />
+            <span className="ml-2">
+              Yes
+            </span>
+          </CButton>
+
+          <CButton
+            className="ml-2 box-shadow-none"
+            color="primary"
+            onClick={ this.onClickButtonModalClose }
+          >
+            <FontAwesomeIcon icon="times" />
+            <span className="ml-2">
+              No
+            </span>
+          </CButton>
+
+        </React.Fragment>
+
+      );
+
+    }
     */
-
-    //const Authentication = this.props.Authentication; //Prop come from redux store
-
-    //console.log( "Authentication => ", Authentication );
 
     return (
 
@@ -194,7 +307,7 @@ class Header extends Component {
 
         {
 
-          this.state.isAuthenticated ? (
+          isAuthenticated ? (
             <React.Fragment>
               <CToggler
                 inHeader
@@ -213,7 +326,7 @@ class Header extends Component {
 
         {
 
-          !this.state.isAuthenticated ? (
+          !isAuthenticated ? (
             <React.Fragment>
 
               <CHeaderBrand className="ml-2" to="/home">
@@ -249,7 +362,7 @@ class Header extends Component {
 
           {
 
-            !this.state.isAuthenticated ? (
+            !isAuthenticated ? (
 
               <React.Fragment>
 
@@ -287,12 +400,15 @@ class Header extends Component {
                 <CButton
                   className="ml-2 box-shadow-none"
                   color="primary"
+                  onClick={ this.onClickButtonLogout }
+                  /*
                   onClick={ () => {
 
                     //this.props.showModalLogin( event );
-                    this.props.history.push( "/logout" );
+                    //this.props.history.push( "/logout" );
 
                   } }
+                  */
                 >
                   <FontAwesomeIcon icon="sign-out-alt" />
                   <span className="ml-2 d-sm-down-none">
@@ -311,9 +427,7 @@ class Header extends Component {
         <CSubheader className="pl-3 justify-content-between*">
           <CBreadcrumbRouter
             className="border-0 c-subheader-nav m-0 px-0 px-md-3"
-            routes={ [ {
-              path: "/", exact: true, name: "Home"
-            } ] }
+            routes={ routes }
           />
           <CHeaderNav className="ml-auto mr-2">
 
@@ -369,6 +483,14 @@ class Header extends Component {
           {/*  </CHeaderNavItem>*/}
           {/*</CHeaderNav>*/}
         </CSubheader>
+        {/*
+        <MessageModal
+          showMe={ showMessage }
+          title={ this.state.title }
+          message={ this.state.message }
+          buttons={ buttons }
+        />
+        */}
 
       </React.Fragment>
 
@@ -387,7 +509,9 @@ const mapDispatchToProps = {
   toggleLeftSidebarMobile,
   toggleRightSidebar,
   tokenCheck,
-  logout
+  logout,
+  showModalMessage,
+  closeModalMessage
 };
 
 const mapStateToProps = ( state ) => {
@@ -396,8 +520,7 @@ const mapStateToProps = ( state ) => {
 
   return {
     authentication: state.authentication,
-    frontend: state.frontend,
-    modal: state.modal
+    frontend: state.frontend
   };
 
 };

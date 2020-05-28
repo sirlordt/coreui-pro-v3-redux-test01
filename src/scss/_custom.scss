@@ -173,6 +173,14 @@ button.close:hover {
   color: inherit
 }
 
+.no-c-app {
+
+  display: inherit !important;
+  flex-direction: inherit !important;
+  min-height: inherit !important;
+
+}
+
 /*
 .c-dark-theme .c-footer {
   //background: $header-dark-bg__lt; //map-get($theme-colors, "primary") !important;

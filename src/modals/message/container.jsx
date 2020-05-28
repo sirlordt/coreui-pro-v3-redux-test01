@@ -5,6 +5,13 @@ import {
   createPortal
 } from "react-dom";
 import {
+  withRouter
+} from "react-router-dom";
+import {
+  connect
+} from "react-redux";
+/*
+import {
   CModal,
   CModalHeader,
   CModalTitle,
@@ -12,11 +19,27 @@ import {
   CModalFooter
   //CButton
 } from "@coreui/react";
+*/
+
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "reactstrap";
+
+import PropTypes from "prop-types";
 /*
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
 */
+
+const propTypes = {
+  children: PropTypes.node
+};
+
+const defaultProps = {};
 
 const modalRoot = document.getElementById( "modal-root" );
 
@@ -71,31 +94,32 @@ class MessageModal extends Component {
 
   render() {
 
-    //console.log( this.props.show );
+    //console.log( this.props.show ); <div className={ this.props.frontend.themeDark ? "c-app c-dark-theme" : "c-app" }>
 
     return createPortal( (
 
-      <CModal
-        show={ this.props.showMe }
-        onClose={ this.onClickButtonClose }
+      <Modal
+        isOpen={ this.props.showMe }
+        toggle={ this.onClickButtonClose }
+        className={ this.props.frontend.themeDark ? "no-c-app c-app c-dark-theme" : "no-c-app c-app" }
         //closeOnBackdrop={ false }
         //backdrop={ false }
         //size="md"
       >
 
-        <CModalHeader closeButton>
+        <ModalHeader toggle={ this.onClickButtonClose }>
 
-          <CModalTitle>{ this.props.title }</CModalTitle>
+          { this.props.title }
 
-        </CModalHeader>
+        </ModalHeader>
 
-        <CModalBody>
+        <ModalBody>
 
           { this.props.message }
 
-        </CModalBody>
+        </ModalBody>
 
-        <CModalFooter>
+        <ModalFooter>
 
           { /*
           <CButton
@@ -113,13 +137,36 @@ class MessageModal extends Component {
 
           { this.props.buttons }
 
-        </CModalFooter>
+        </ModalFooter>
 
-      </CModal>
+      </Modal>
+
     ), this.element );
 
   }
 
 }
 
-export default MessageModal;
+MessageModal.propTypes = propTypes;
+MessageModal.defaultProps = defaultProps;
+
+const mapDispatchToProps = {};
+
+const mapStateToProps = ( state ) => {
+
+  return {
+
+    authentication: state.authentication,
+    frontend: state.frontend
+
+  };
+
+};
+
+const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
+
+const connectedComponent = connectedWrapper( MessageModal );
+
+export default withRouter( connectedComponent );
+
+//export default MessageModal;

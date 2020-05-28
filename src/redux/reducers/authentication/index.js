@@ -277,6 +277,15 @@ function reducer( state = initialState.authentication, action ) {
           data: action.payload.response || {}
         };
 
+        const AccountsData = {
+
+          active: result.active,
+          accounts: result.accounts
+
+        };
+
+        localStorage.setItem( "_ACCOUNTS_DATA", JSON.stringify( AccountsData ) );
+
       }
       catch ( error ) {
 

@@ -18,6 +18,17 @@ import Loading from "./components/loading";
 //const LoginModal = React.lazy( () => import( "./components/loginModal" ) );
 const RootPage = React.lazy( () => import( "./pages/root" ) );
 
+if ( process.env.REACT_APP_DEBUG !== "-" ) {
+
+  localStorage.setItem( "debug", process.env.REACT_APP_DEBUG );
+
+}
+else {
+
+  localStorage.removeItem( "debug" );
+
+}
+
 function App() {
 
   return (

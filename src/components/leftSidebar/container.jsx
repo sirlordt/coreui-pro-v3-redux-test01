@@ -6,7 +6,7 @@ import {
 } from "react-redux";
 
 import {
-  //CCreateElement,
+  CCreateElement,
   CSidebar,
   CSidebarBrand,
   CSidebarNav,
@@ -25,13 +25,12 @@ import {
 import logo from "../../assets/img/brand/coreui-react-pro-neg.svg";
 import sygnet from "../../assets/img/brand/coreui-signet-white.svg";
 
-// sidebar nav config
-//import navigation from "../navigation";
-
 import {
   minimizeLeftSidebar,
   closeLeftSidebar
 } from "../../redux/actions";
+
+import navigation from "./navigation";
 
 class LeftSidebar extends Component {
 
@@ -93,9 +92,7 @@ class LeftSidebar extends Component {
         <Suspense>
           <CSidebarNav>
 
-            {/*
             <CCreateElement items={ navigation } />
-            */}
 
             <CSidebarNavDivider />
             <CSidebarNavTitle>System Utilization</CSidebarNavTitle>
