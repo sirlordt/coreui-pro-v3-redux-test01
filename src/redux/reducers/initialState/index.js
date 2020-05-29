@@ -72,14 +72,6 @@ const initialState = {
 
     modalStack: new Map()
 
-    /*
-    modalCode: "",
-    modalTitle: "",
-    modalMessage: "",
-    modalContent: null,
-    modalButtons: null
-    */
-
   }
 
 };

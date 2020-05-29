@@ -2,24 +2,31 @@ import {
   cloneDeep
 } from "lodash";
 
+import detectBrowserLanguage from "detect-browser-language";
 import {
+  i18nFallbackLanguages
+} from "../../../config/i18n.config";
+
+import {
+  _INIT_FRONTEND_STATE,
+  _SAVE_FRONTEND_STATE,
   _ERROR_IN_REDUCER,
   _DELETE_RESULT,
-  //_INIT_LOCAL_STATE,
-  //_SAVE_LOCAL_STATE,
   _TOGGLE_DARK,
   _TOGGLE_LEFT_SIDERBAR,
   _TOGGLE_LEFT_SIDERBAR_MOBILE,
   _MINIMIZE_LEFT_SIDERBAR,
   _CLOSE_LEFT_SIDERBAR,
   _TOGGLE_RIGHT_SIDERBAR,
-  _SHOW_MODAL_MESSAGE,
-  _CLOSE_MODAL_MESSAGE,
-  _CLEAR_MODAL_MESSAGE
+  _SHOW_MODAL,
+  _CLOSE_MODAL,
+  _CLEAR_MODAL
 } from "../../constants";
 import SystemUtils from "../../../utils/systemUtils";
 
+
 import initialState from "../initialState";
+import CommonUtilities from "../../../utils/commonUtilities";
 
 /*
 const initialState = {
@@ -38,24 +45,36 @@ function reducer( state = initialState.frontend, action ) {
 
   let result = null;
 
+  //console.log( "Action => ", action.id );
+
   switch ( action.type ) {
 
-    /*
-    case _INIT_LOCAL_STATE: {
+    case _INIT_FRONTEND_STATE: {
 
       try {
 
-        const jsonFrontendInfo = JSON.parse( localStorage.getItem( "_FRONTEND_INFO" ) );
+        const jsonFrontendInfo = CommonUtilities.parseJSON( localStorage.getItem( "_FRONTEND_INFO" ) ) || {};
 
-        result = {
-          themeDark: jsonFrontendInfo.themeDark || false,
-          language: jsonFrontendInfo.language || "en_US",
-          isLeftSidebarOpen: jsonFrontendInfo.isLeftSidebarOpen || "responsive",
-          isLeftSidebarMinimized: jsonFrontendInfo.isLeftSidebarMinimized || false,
-          sidebarMobile: jsonFrontendInfo.sidebarMobile || false,
-          sidebarDisplay: jsonFrontendInfo.sidebarDisplay || "sm",
-          isRightSidebarOpen: jsonFrontendInfo.isRightSidebarOpen || false
-        };
+        let strUseThisLanguage = detectBrowserLanguage().replace( "-", "_" );
+
+        strUseThisLanguage = i18nFallbackLanguages[ strUseThisLanguage ]; //strUseThisLanguage.replace( "419", "ES" );
+
+        if ( jsonFrontendInfo.language ) {
+
+          strUseThisLanguage = jsonFrontendInfo.language.replace( "-", "_" );
+
+        }
+
+        result = cloneDeep( initialState.frontend );
+
+        result.language = strUseThisLanguage || "en_US";
+
+        result.themeDark = jsonFrontendInfo.themeDark || initialState.frontend.themeDark;
+        result.isLeftSidebarOpen = jsonFrontendInfo.isLeftSidebarOpen || initialState.frontend.isLeftSidebarOpen;
+        result.isLeftSidebarMinimized = jsonFrontendInfo.isLeftSidebarMinimized || initialState.frontend.isLeftSidebarMinimized;
+        result.sidebarMobile = jsonFrontendInfo.sidebarMobile || initialState.frontend.sidebarMobile;
+        result.sidebarDisplay = jsonFrontendInfo.sidebarDisplay || initialState.frontend.sidebarDisplay;
+        result.isRightSidebarOpen = jsonFrontendInfo.isRightSidebarOpen || initialState.frontend.isRightSidebarOpen;
 
       }
       catch ( error ) {
@@ -76,15 +95,19 @@ function reducer( state = initialState.frontend, action ) {
 
       }
 
-      result = state;
+      //result = state;
 
       break;
 
     }
 
-    case _SAVE_LOCAL_STATE: {
+    case _SAVE_FRONTEND_STATE: {
 
       try {
+
+        result = cloneDeep( state );
+
+        delete state.id;
 
         localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( state ) );
 
@@ -107,12 +130,11 @@ function reducer( state = initialState.frontend, action ) {
 
       }
 
-      result = state;
+      //result = state;
 
       break;
 
     }
-    */
 
     case _DELETE_RESULT: {
 
@@ -157,6 +179,12 @@ function reducer( state = initialState.frontend, action ) {
         result = cloneDeep( state );
 
         result.themeDark = !result.themeDark;
+
+        delete result.id; //not save the id
+
+        localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( result ) );
+
+        result.id = state.id;
 
         result.results[ action.payload.transactionId ] = {
           actionType: action.type,
@@ -393,7 +421,7 @@ function reducer( state = initialState.frontend, action ) {
       break;
 
     }
-    case _SHOW_MODAL_MESSAGE: {
+    case _SHOW_MODAL: {
 
       try {
 
@@ -452,7 +480,7 @@ function reducer( state = initialState.frontend, action ) {
 
     }
 
-    case _CLOSE_MODAL_MESSAGE: {
+    case _CLOSE_MODAL: {
 
       try {
 
@@ -512,7 +540,7 @@ function reducer( state = initialState.frontend, action ) {
 
     }
 
-    case _CLEAR_MODAL_MESSAGE: {
+    case _CLEAR_MODAL: {
 
       try {
 

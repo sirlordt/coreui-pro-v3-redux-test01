@@ -1,5 +1,6 @@
-import initAccountState from "./initAccountState";
-import saveAccountState from "./saveAccountState";
+import initFrontendState from "./initFrontendState";
+import saveFrontendState from "./saveFrontendState";
+
 import toggleDark from "./toggleDark";
 import toggleLeftSidebar from "./toggleLeftSidebar";
 import toggleLeftSidebarMobile from "./toggleLeftSidebarMobile";
@@ -13,12 +14,13 @@ import tokenCheck from "./tokenCheck";
 import logout from "./logout";
 import resetActiveUser from "./resetActiveUser";
 import deleteResult from "./deleteResult";
-import showModalMessage from "./showModalMessage";
-import closeModalMessage from "./closeModalMessage";
+import showModal from "./showModal";
+import closeModal from "./closeModal";
+import changeLanguage from "./changeLanguage";
 
 export {
-  initAccountState,
-  saveAccountState,
+  initFrontendState,
+  saveFrontendState,
   toggleDark,
   toggleLeftSidebar,
   toggleLeftSidebarMobile,
@@ -30,6 +32,7 @@ export {
   logout,
   resetActiveUser,
   deleteResult,
-  showModalMessage,
-  closeModalMessage
+  showModal,
+  closeModal,
+  changeLanguage
 };

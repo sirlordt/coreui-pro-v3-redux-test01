@@ -10,6 +10,7 @@ import {
 import {
   connect
 } from "react-redux";
+
 /*
 import {
   CModal,
@@ -29,14 +30,11 @@ import {
 } from "reactstrap";
 
 import PropTypes from "prop-types";
-/*
-import {
-  FontAwesomeIcon
-} from "@fortawesome/react-fontawesome";
-*/
 
 const propTypes = {
+
   children: PropTypes.node
+
 };
 
 const defaultProps = {};
@@ -49,16 +47,11 @@ class MessageModal extends Component {
 
     super( props );
 
-    this.state = {
-
-      show: true
-
-    };
-
     // We create an element div for this modal
     this.element = document.createElement( "div" );
 
   }
+
   // We append the created div to the div#modal
   componentDidMount() {
 
@@ -78,12 +71,6 @@ class MessageModal extends Component {
 
   onClickButtonClose = ( event ) => {
 
-    /*
-    this.setState( {
-      show: false
-    } );
-    */
-
     if ( this.props.onClickButtonClose ) {
 
       this.props.onClickButtonClose( event );
@@ -94,14 +81,12 @@ class MessageModal extends Component {
 
   render() {
 
-    //console.log( this.props.show ); <div className={ this.props.frontend.themeDark ? "c-app c-dark-theme" : "c-app" }>
-
     return createPortal( (
 
       <Modal
         isOpen={ this.props.showMe }
-        toggle={ this.onClickButtonClose }
         className={ this.props.frontend.themeDark ? "no-c-app c-app c-dark-theme" : "no-c-app c-app" }
+        toggle={ this.onClickButtonClose }
         //closeOnBackdrop={ false }
         //backdrop={ false }
         //size="md"
@@ -120,20 +105,6 @@ class MessageModal extends Component {
         </ModalBody>
 
         <ModalFooter>
-
-          { /*
-          <CButton
-            //disabled={ this.state.buttonLoginDisabled }
-            className="ml-2 box-shadow-none"
-            color="primary"
-            onClick={ this.onClickButtonClose }
-          >
-            <FontAwesomeIcon icon="times" />
-            <span className="ml-2">
-              Close
-            </span>
-          </CButton>
-          */}
 
           { this.props.buttons }
 
@@ -168,5 +139,3 @@ const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
 const connectedComponent = connectedWrapper( MessageModal );
 
 export default withRouter( connectedComponent );
-
-//export default MessageModal;

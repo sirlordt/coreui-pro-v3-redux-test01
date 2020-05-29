@@ -22,21 +22,15 @@ import {
   CBreadcrumbRouter
   //CLink
 } from "@coreui/react";
-/*
-import {
-  CIcon
-} from "@coreui/icons-react";
-*/
+
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
+
 // routes config
 import routes from "../../routes";
 
-//import PublicHeaderDropdown from "../headerDropdown";
-
 import logo from "../../assets/img/brand/coreui-pro-base.svg";
-//import sygnet from '../../assets/img/brand/coreui-signet.svg'
 
 import {
   toggleDark,
@@ -45,16 +39,16 @@ import {
   toggleRightSidebar,
   tokenCheck,
   logout,
-  showModalMessage,
-  closeModalMessage
+  showModal,
+  closeModal
 } from "../../redux/actions";
-import SystemUtils from "../../utils/systemUtils";
-//import MessageModal from "../../modals/message/container";
 
-//const LoginModal = React.lazy( () => import( "../loginModal" ) );
+import SystemUtils from "../../utils/systemUtils";
 
 const propTypes = {
+
   children: PropTypes.node
+
 };
 
 const defaultProps = {};
@@ -68,12 +62,6 @@ class Header extends Component {
     this.state = {
 
       id: SystemUtils.getUUIDv4()
-      //isAuthenticated: false,
-      /*
-      modalCode: "",
-      title: "",
-      message: ""
-      */
 
     };
 
@@ -88,62 +76,46 @@ class Header extends Component {
 
       if ( strCode === "NO_RESPONSE_FROM_SERVER" ) {
 
-        /*
-        this.setState( {
-          modalCode: "NOTIFICATION",
-          title: "No response from server",
-          message: strMessage
-        } );
-        */
+        this.props.showModal( {
 
-        this.props.showModalMessage( {
           modalId: this.state.id,
-          modalCode: "NO_RESPONSE_FROM_SERVER",
+          modalCode: "NO_RESPONSE_FROM_SERVER_MODAL",
           modalTitle: "No response from server",
           modalMessage: strMessage,
           modalTag: "forceCheckToken"
+
         } );
 
 
       }
       else if ( strCode === "SUCCESS_LOGOUT" ) {
 
-        /*
-        this.setState( {
-          modalCode: "NOTIFICATION",
-          title: "Success logout",
-          message: strMessage
-        } );
-        */
+        this.props.showModal( {
 
-        this.props.showModalMessage( {
           modalId: this.state.id,
-          modalCode: "NOTIFICATION",
+          modalCode: "NOTIFICATION_MODAL",
           modalTitle: "Success logout",
           modalMessage: strMessage
+
         } );
 
         this.props.history.replace( {
+
           pathname: "/home"
+
         } );
 
       }
       else { //Other errors
 
-        this.props.showModalMessage( {
+        this.props.showModal( {
+
           modalId: this.state.id,
-          modalCode: "NOTIFICATION",
+          modalCode: "NOTIFICATION_MODAL",
           modalTitle: "Error",
           modalMessage: strMessage
-        } );
 
-        /*
-        this.setState( {
-          modalCode: "NOTIFICATION",
-          title: "Error",
-          message: strMessage
         } );
-        */
 
       }
 
@@ -163,143 +135,20 @@ class Header extends Component {
 
     event && event.preventDefault();
 
-    /*
-    const buttons = (
+    this.props.showModal( {
 
-      <React.Fragment>
-
-        <CButton
-          className="ml-2 box-shadow-none"
-          onClick={ this.onClickButtonLogoutModalYes }
-        >
-          <FontAwesomeIcon icon="check" />
-          <span className="ml-2">
-            Yes
-          </span>
-        </CButton>
-
-        <CButton
-          className="ml-2 box-shadow-none"
-          color="primary"
-          onClick={ this.onClickButtonModalClose }
-        >
-          <FontAwesomeIcon icon="times" />
-          <span className="ml-2">
-            No
-          </span>
-        </CButton>
-
-      </React.Fragment>
-
-    );
-    */
-
-    this.props.showModalMessage( {
       modalId: this.state.id,
-      modalCode: "LOGOUT_QUESTION",
+      modalCode: "LOGOUT_QUESTION_MODAL",
       modalTitle: "Logout",
       modalMessage: "Are you sure do you want logout?"
-      //modalButtons: buttons
-    } );
 
-    /*
-    this.setState( {
-      showMessage: true,
-      modalCode: "LOGOUT_QUESTION",
-      title: "Logout",
-      message: "Are you sure do you want logout?"
-    } );
-    */
-
-  }
-
-  /*
-  onClickButtonLogoutModalYes = ( event ) => {
-
-    event && event.preventDefault();
-
-    const strUsername = this.props.authentication.active;
-    const strAutorization = this.props.authentication.accounts[ this.props.authentication.active ].Authorization;
-
-    this.props.logout( {
-      transactionId: this.state.id,
-      username: strUsername,
-      authorization: strAutorization
     } );
 
   }
-
-  onClickButtonModalClose = ( event ) => {
-
-    event && event.preventDefault();
-
-    this.props.closeModalMessage( {
-      transactionId: this.state.id
-    } );
-
-  }
-  */
 
   render() {
 
     const isAuthenticated = !!( this.props.authentication.active );
-
-    /*
-    const showMessage = !!( this.state.modalCode && this.state.title && this.state.message );
-
-    let buttons = null;
-
-    if ( this.state.modalCode === "NOTIFICATION" ) {
-
-      buttons = (
-
-        <CButton
-          className="ml-2 box-shadow-none"
-          color="primary"
-          onClick={ this.onClickButtonModalClose }
-        >
-          <FontAwesomeIcon icon="times" />
-          <span className="ml-2">
-            Close
-          </span>
-        </CButton>
-
-      );
-
-    }
-    else if ( this.state.modalCode === "LOGOUT_QUESTION" ) {
-
-      buttons = (
-
-        <React.Fragment>
-
-          <CButton
-            className="ml-2 box-shadow-none"
-            onClick={ this.onClickButtonLogoutModalYes }
-          >
-            <FontAwesomeIcon icon="check" />
-            <span className="ml-2">
-              Yes
-            </span>
-          </CButton>
-
-          <CButton
-            className="ml-2 box-shadow-none"
-            color="primary"
-            onClick={ this.onClickButtonModalClose }
-          >
-            <FontAwesomeIcon icon="times" />
-            <span className="ml-2">
-              No
-            </span>
-          </CButton>
-
-        </React.Fragment>
-
-      );
-
-    }
-    */
 
     return (
 
@@ -510,8 +359,8 @@ const mapDispatchToProps = {
   toggleRightSidebar,
   tokenCheck,
   logout,
-  showModalMessage,
-  closeModalMessage
+  showModal,
+  closeModal
 };
 
 const mapStateToProps = ( state ) => {

@@ -6,6 +6,11 @@ import {
   Provider
 } from "react-redux";
 
+import {
+  I18nextProvider
+} from "react-i18next";
+import i18n from "./config/i18n.config";
+
 import "./utils/icons";
 
 import mainStore from "./redux/store";
@@ -33,11 +38,13 @@ function App() {
 
   return (
     <Provider store={ mainStore }>
-      <HashRouter>
-        <React.Suspense fallback={ <Loading /> }>
-          <RootPage />
-        </React.Suspense>
-      </HashRouter>
+      <I18nextProvider i18n={ i18n }>
+        <HashRouter>
+          <React.Suspense fallback={ <Loading /> }>
+            <RootPage />
+          </React.Suspense>
+        </HashRouter>
+      </I18nextProvider>
     </Provider>
   );
 

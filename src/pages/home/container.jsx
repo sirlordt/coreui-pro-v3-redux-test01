@@ -25,15 +25,13 @@ import {
   tokenCheck,
   resetActiveUser,
   deleteResult,
-  showModalMessage,
-  closeModalMessage
+  showModal,
+  closeModal
 } from "../../redux/actions";
 
 import SystemUtils from "../../utils/systemUtils";
-//import MessageModal from "../../modals/message/container";
-import Content from "../content";
 
-//export const Context = React.createContext( { show: false } );
+import Content from "../content";
 
 const Header = React.lazy( () => import( "../../components/header" ) );
 const Footer = React.lazy( () => import( "../../components/footer" ) );
@@ -42,7 +40,9 @@ const LeftSidebar = React.lazy( () => import( "../../components/leftSidebar" ) )
 //const PublicRightSidebar = React.lazy( () => import( "../../components/rightSidebar" ) );
 
 const propTypes = {
+
   children: PropTypes.node
+
 };
 
 const defaultProps = {};
@@ -58,10 +58,7 @@ class HomePage extends Component {
     this.state = {
 
       id: SystemUtils.getUUIDv4(),
-      isLoading: false,
-      modalCode: "",
-      title: "",
-      message: ""
+      isLoading: false
 
     };
 
@@ -76,37 +73,25 @@ class HomePage extends Component {
 
       if ( strCode === "NO_RESPONSE_FROM_SERVER" ) {
 
-        /*
-        this.setState( {
-          modalCode: "NO_RESPONSE_FROM_SERVER",
-          title: "No response from server",
-          message: strMessage
-        } );
-        */
+        this.props.showModal( {
 
-        this.props.showModalMessage( {
           modalId: this.state.id,
-          modalCode: "NO_RESPONSE_FROM_SERVER",
+          modalCode: "NO_RESPONSE_FROM_SERVER_MODAL",
           modalTitle: "No response from server",
           modalMessage: strMessage,
           modalTag: "forceCheckToken"
+
         } );
 
       }
       else if ( strCode === "SUCCESS_TOKEN_IS_VALID" ) {
 
-        this.props.closeModalMessage( {
-          transactionId: this.state.id,
-          clearModalCode: "NO_RESPONSE_FROM_SERVER"
-        } );
+        this.props.closeModal( {
 
-        /*
-        this.setState( {
-          modalCode: "",
-          title: "",
-          message: ""
+          transactionId: this.state.id,
+          clearModalCode: "NO_RESPONSE_FROM_SERVER_MODAL"
+
         } );
-        */
 
       }
       else {
@@ -116,25 +101,21 @@ class HomePage extends Component {
         if ( this.props.authentication.active ) {
 
           this.props.resetActiveUser( {
+
             username: this.props.authentication.active
+
           } );
 
         }
 
-        this.props.showModalMessage( {
+        this.props.showModal( {
+
           modalId: this.state.id,
-          modalCode: "NOTIFICATION",
+          modalCode: "NOTIFICATION_MODAL",
           modalTitle: "Error",
           modalMessage: strMessage
-        } );
 
-        /*
-        this.setState( {
-          modalCode: "NOTIFICATION",
-          title: "Error",
-          message: strMessage
         } );
-        */
 
       }
 
@@ -152,9 +133,11 @@ class HomePage extends Component {
 
       //Launch token check
       this.props.tokenCheck( {
+
         transactionId: this.state.id,
         authorization: this.props.authentication.accounts[ this.props.authentication.active ].Authorization,
         logger: null
+
       } );
 
     }
@@ -166,28 +149,25 @@ class HomePage extends Component {
       if ( intTokenCheck === -1 ) { //Invalid status state. Reset the state
 
         this.props.resetActiveUser( {
+
           transactionId: this.state.id,
-          username: this.props.authentication.active
+          username: this.props.authentication.active,
+          logge: null
+
         } );
 
       }
 
-      //if ( this.props.frontend.modalId === this.state.id ) {
       if ( intTokenCheck !== 0 ) {
 
-        this.props.closeModalMessage( {
-          transactionId: this.state.id
+        this.props.closeModal( {
+
+          transactionId: this.state.id,
+          logger: null
+
         } );
 
       }
-
-      /*
-      this.setState( {
-        messageKind: "",
-        title: "",
-        message: ""
-      } );
-      */
 
     }
 
@@ -211,20 +191,6 @@ class HomePage extends Component {
 
   }
 
-  onClickButtonCheckAgainNRFSModal = ( event ) => {
-
-    event && event.preventDefault();
-
-    this.tokenCheck();
-
-  }
-
-  onClickButtonCloseModal = ( event ) => {
-
-    event && event.preventDefault();
-
-  }
-
   render() {
 
     let result = null;
@@ -238,87 +204,20 @@ class HomePage extends Component {
 
       const isAuthenticated = !!( this.props.authentication.active );
 
-      /*
-      const showMessage = !!( this.state.modalCode && this.state.title && this.state.message );
-      let modalMessage = null;
-
-      if ( showMessage && this.state.modalCode === "NOTIFICATION" ) {
-
-        const buttons = (
-
-          <CButton
-            className="ml-2 box-shadow-none"
-            color="primary"
-            onClick={ this.onClickButtonCloseModal }
-          >
-            <FontAwesomeIcon icon="times" />
-            <span className="ml-2">
-              Close
-            </span>
-          </CButton>
-
-        );
-
-        modalMessage = (
-
-          <MessageModal
-            showMe={ showMessage }
-            title={ this.state.title }
-            message={ this.state.message }
-            buttons={ buttons }
-          />
-
-        );
-
-      }
-      else if ( showMessage && this.state.modalCode === "NO_RESPONSE_FROM_SERVER" ) {
-
-        const buttons = (
-
-          <React.Fragment>
-
-            <CButton
-              className="ml-2 box-shadow-none"
-              color="primary"
-              onClick={ this.onClickButtonCheckAgainNRFSModal }
-            >
-              <FontAwesomeIcon icon="sync" />
-              <span className="ml-2">
-                Check again
-              </span>
-            </CButton>
-
-          </React.Fragment>
-
-        );
-
-        modalMessage = (
-
-          <MessageModal
-            showMe={ showMessage }
-            title={ this.state.title }
-            message={ this.state.message }
-            buttons={ buttons }
-          />
-
-        );
-
-      }
-      */
-
       // dark theme
       const classes = classNames(
         "c-app c-default-layout",
         this.props.frontend.themeDark ? "c-dark-theme" : false
-        //this.state.themeDark ? "c-dark-theme" : false
       );
 
       result = (
 
         <div className={ classes }>
+
           {
             isAuthenticated ? <LeftSidebar /> : null
           }
+
           <div className="c-wrapper">
             <CHeader withSubheader>
               <Suspense fallback={ <Loading /> }>
@@ -338,7 +237,7 @@ class HomePage extends Component {
               </Suspense>
             </CFooter>
           </div>
-          {/* modalMessage */}
+
         </div>
 
       );
@@ -359,8 +258,8 @@ const mapDispatchToProps = {
   deleteResult,
   resetActiveUser,
   toggleDark,
-  showModalMessage,
-  closeModalMessage
+  showModal,
+  closeModal
 };
 
 const mapStateToProps = ( state ) => {

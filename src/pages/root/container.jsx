@@ -7,6 +7,16 @@ import {
   //Redirect,
   withRouter
 } from "react-router-dom";
+import {
+  connect
+} from "react-redux";
+import PropTypes from "prop-types";
+import {
+  initFrontendState
+} from "../../redux/actions";
+
+import SystemUtils from "../../utils/systemUtils";
+
 import ModalManager from "../../modals/manager";
 
 // Containers
@@ -23,7 +33,33 @@ const defaultLocation = {
 };
 */
 
+const propTypes = {
+  children: PropTypes.node
+};
+
+const defaultProps = {};
+
 class RootPage extends Component {
+
+  constructor( props ) {
+
+    super( props );
+
+    this.state = {
+
+      id: SystemUtils.getUUIDv4()
+
+    };
+
+  }
+
+  componentDidMount() {
+
+    this.props.initFrontendState( {
+      transactionId: this.state.id
+    } );
+
+  }
 
   componentDidUpdate() {
 
@@ -127,4 +163,27 @@ class RootPage extends Component {
 
 }
 
-export default withRouter( RootPage );
+
+RootPage.propTypes = propTypes;
+RootPage.defaultProps = defaultProps;
+
+const mapDispatchToProps = {
+  initFrontendState
+};
+
+const mapStateToProps = ( state ) => {
+
+  return {
+
+    authentication: state.authentication,
+    frontend: state.frontend
+
+  };
+
+};
+
+const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
+
+const connectedComponent = connectedWrapper( RootPage );
+
+export default withRouter( connectedComponent );
