@@ -1,16 +1,20 @@
 import React, {
   Component
 } from "react";
+
 import {
   Route,
   Switch,
   //Redirect,
   withRouter
 } from "react-router-dom";
+
 import {
   connect
 } from "react-redux";
+
 import PropTypes from "prop-types";
+
 import {
   initFrontendState
 } from "../../redux/actions";
@@ -34,7 +38,9 @@ const defaultLocation = {
 */
 
 const propTypes = {
+
   children: PropTypes.node
+
 };
 
 const defaultProps = {};
@@ -56,7 +62,9 @@ class RootPage extends Component {
   componentDidMount() {
 
     this.props.initFrontendState( {
+
       transactionId: this.state.id
+
     } );
 
   }

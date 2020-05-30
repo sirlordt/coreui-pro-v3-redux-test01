@@ -2,15 +2,17 @@ import React, {
   Component
   //Suspense
 } from "react";
+
 import {
   withRouter
 } from "react-router-dom";
+
 import {
   connect
 } from "react-redux";
-//import { NavLink } from 'react-router-dom';
-//import * as router from 'react-router-dom';
+
 import PropTypes from "prop-types";
+
 import {
   CButton,
   CToggler,
@@ -26,6 +28,11 @@ import {
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
+
+import {
+  Trans,
+  withTranslation
+} from "react-i18next";
 
 // routes config
 import routes from "../../routes";
@@ -71,6 +78,8 @@ class Header extends Component {
 
     if ( this.props.authentication.results[ this.state.id ]?.mark !== nextProps.authentication.results[ this.state.id ]?.mark ) {
 
+      const t = this.props.t;
+
       const strCode = nextProps.authentication.results[ this.state.id ].data.Code;
       const strMessage = nextProps.authentication.results[ this.state.id ].data.Message;
 
@@ -80,12 +89,11 @@ class Header extends Component {
 
           modalId: this.state.id,
           modalCode: "NO_RESPONSE_FROM_SERVER_MODAL",
-          modalTitle: "No response from server",
-          modalMessage: strMessage,
+          modalTitle: t( "No response from server" ),
+          modalMessage: t( strMessage ),
           modalTag: "forceCheckToken"
 
         } );
-
 
       }
       else if ( strCode === "SUCCESS_LOGOUT" ) {
@@ -94,8 +102,8 @@ class Header extends Component {
 
           modalId: this.state.id,
           modalCode: "NOTIFICATION_MODAL",
-          modalTitle: "Success logout",
-          modalMessage: strMessage
+          modalTitle: t( "Success Logout" ),
+          modalMessage: t( strMessage )
 
         } );
 
@@ -135,12 +143,14 @@ class Header extends Component {
 
     event && event.preventDefault();
 
+    const t = this.props.t; //Translate functions injected by withTranslation function
+
     this.props.showModal( {
 
       modalId: this.state.id,
       modalCode: "LOGOUT_QUESTION_MODAL",
-      modalTitle: "Logout",
-      modalMessage: "Are you sure do you want logout?"
+      modalTitle: t( "Logout" ),
+      modalMessage: t( "Are you sure do you want logout?" )
 
     } );
 
@@ -150,6 +160,8 @@ class Header extends Component {
 
     const isAuthenticated = !!( this.props.authentication.active );
 
+    const t = this.props.t; //Translate functions injected by withTranslation function
+
     return (
 
       <React.Fragment>
@@ -157,18 +169,23 @@ class Header extends Component {
         {
 
           isAuthenticated ? (
+
             <React.Fragment>
+
               <CToggler
                 inHeader
                 className="ml-md-3 d-lg-none"
                 onClick={ ( event ) => this.props.toggleLeftSidebarMobile( event ) }
               />
+
               <CToggler
                 inHeader
                 className="ml-3 d-md-down-none"
                 onClick={ ( event ) => this.props.toggleLeftSidebar( event ) }
               />
+
             </React.Fragment>
+
           ) : null
 
         }
@@ -176,36 +193,30 @@ class Header extends Component {
         {
 
           !isAuthenticated ? (
+
             <React.Fragment>
 
               <CHeaderBrand className="ml-2" to="/home">
+
                 <img src={ logo } height="48" alt="Logo" />
+
               </CHeaderBrand>
 
               <div className="mx-auto" />
 
             </React.Fragment>
+
           ) : (
+
             <CHeaderBrand className="mx-auto d-lg-none" to="/home">
+
               <img src={ logo } height="48" alt="Logo" />
+
             </CHeaderBrand>
+
           )
 
         }
-
-        {/* mx-auto d-lg-none
-        <CHeaderNav className="d-md-down-none mr-auto">
-          <CHeaderNavItem className="px-3">
-            <CHeaderNavLink to="/dashboard">Dashboard</CHeaderNavLink>
-          </CHeaderNavItem>
-          <CHeaderNavItem className="px-3">
-            <CHeaderNavLink to="/users">Users</CHeaderNavLink>
-          </CHeaderNavItem>
-          <CHeaderNavItem className="px-3">
-            <CHeaderNavLink>Settings</CHeaderNavLink>
-          </CHeaderNavItem>
-        </CHeaderNav>
-        */}
 
         <CHeaderNav className="ml-lg-auto mr-2">
 
@@ -220,24 +231,33 @@ class Header extends Component {
                   color="primary"
                   onClick={ () => {
 
-                    //this.props.showModalLogin( event );
                     this.props.history.push( "/login" );
 
                   } }
                 >
+
                   <FontAwesomeIcon icon="sign-in-alt" />
+
                   <span className="ml-2 d-sm-down-none">
-                    Login
+
+                    <Trans i18nKey="Login" />
+
                   </span>
+
                 </CButton>
 
                 <CButton
                   className="ml-2 box-shadow-none"
                   color="success">
+
                   <FontAwesomeIcon icon="user-plus" />
+
                   <span className="ml-2 d-sm-down-none">
-                    Signup
+
+                    <Trans i18nKey="Signup" />
+
                   </span>
+
                 </CButton>
 
               </React.Fragment>
@@ -250,19 +270,16 @@ class Header extends Component {
                   className="ml-2 box-shadow-none"
                   color="primary"
                   onClick={ this.onClickButtonLogout }
-                  /*
-                  onClick={ () => {
-
-                    //this.props.showModalLogin( event );
-                    //this.props.history.push( "/logout" );
-
-                  } }
-                  */
                 >
+
                   <FontAwesomeIcon icon="sign-out-alt" />
+
                   <span className="ml-2 d-sm-down-none">
-                    Logout
+
+                    <Trans i18nKey="Logout" />
+
                   </span>
+
                 </CButton>
 
               </React.Fragment>
@@ -278,68 +295,24 @@ class Header extends Component {
             className="border-0 c-subheader-nav m-0 px-0 px-md-3"
             routes={ routes }
           />
+
           <CHeaderNav className="ml-auto mr-2">
 
             <CToggler
               inHeader
               className="ml-auto"
               onClick={ this.props.toggleDark }
-              title="Toggle Light/Dark Mode"
+              title={ t( "Toggle Light/Dark Mode" ) }
             >
-              <FontAwesomeIcon icon="moon" name="cil-moon" className="c-d-dark-none" alt="CoreUI Icons Moon" />
-              <FontAwesomeIcon icon="sun" name="cil-sun" className="c-d-default-none" alt="CoreUI Icons Sun" />
 
-              {/*
-              <CIcon name="cil-moon" className="c-d-dark-none" alt="CoreUI Icons Moon" />
-              <CIcon name="cil-sun" className="c-d-default-none" alt="CoreUI Icons Sun" />
-              */}
+              <FontAwesomeIcon icon="moon" name="cil-moon" className="c-d-dark-none" alt={ t( "Dark mode" ) } />
+              <FontAwesomeIcon icon="sun" name="cil-sun" className="c-d-default-none" alt={ t( "Light mode" ) } />
+
             </CToggler>
 
           </CHeaderNav>
 
-          {/*
-          <ul className="d-md-down-none mfe-2 c-subheader-nav ml-auto">
-            <li className="c-subheader-nav-link">
-              <CLink href="#">
-                <CIcon name="cil-speech" alt="Settings" />
-              </CLink>
-            </li>
-            <li className="c-subheader-nav-link">
-              <CLink aria-current="page" href="#/dashboard">
-                <CIcon name="cil-graph" alt="Dashboard" />
-                {" "}
-                Dashboard
-              </CLink>
-            </li>
-            <li className="c-subheader-nav-link">
-              <CLink href="#">
-                <CIcon name="cil-settings" alt="Settings" />
-                {" "}
-                Settings
-              </CLink>
-            </li>
-          </ul>
-          */}
-          {/*<CHeaderNav className="d-md-down-none mfe-2 c-subheader-nav">*/}
-          {/*  <CHeaderNavItem className="c-subheader-nav-link">*/}
-          {/*    <CIcon name="cil-speech" alt="Settings" />*/}
-          {/*  </CHeaderNavItem>*/}
-          {/*  <CHeaderNavItem to="/dashboard" className="c-subheader-nav-link">*/}
-          {/*    <CIcon name="cil-graph" alt="Dashboard" /> Dashboard*/}
-          {/*  </CHeaderNavItem>*/}
-          {/*  <CHeaderNavItem className="c-subheader-nav-link">*/}
-          {/*    <CIcon name="cil-settings" alt="Settings" /> Settings*/}
-          {/*  </CHeaderNavItem>*/}
-          {/*</CHeaderNav>*/}
         </CSubheader>
-        {/*
-        <MessageModal
-          showMe={ showMessage }
-          title={ this.state.title }
-          message={ this.state.message }
-          buttons={ buttons }
-        />
-        */}
 
       </React.Fragment>
 
@@ -368,8 +341,10 @@ const mapStateToProps = ( state ) => {
   //console.log( "Header State => ", state );
 
   return {
+
     authentication: state.authentication,
     frontend: state.frontend
+
   };
 
 };
@@ -378,6 +353,6 @@ const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
 
 const connectedComponent = connectedWrapper( Header );
 
-export default withRouter( connectedComponent );
+export default withRouter( withTranslation()( connectedComponent ) );
 
 //export default Header;

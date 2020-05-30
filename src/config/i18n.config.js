@@ -51,6 +51,91 @@ export const i18nFallbackLanguages = {
 
 };
 
+export const languages = [
+
+  {
+
+    flag: "/assets/images/flags/countries/usa.svg",
+    code: "en_US",
+    name: "English",
+    country: "United States Of America"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/usa.svg",
+    code: "es_US",
+    name: "Español",
+    country: "Estados Unidos De America"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/spain.svg",
+    code: "es_ES",
+    name: "Español",
+    country: "España"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/mexico.svg",
+    code: "es_MX",
+    name: "Español",
+    country: "Estados Unidos Mexicanos"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/venezuela.svg",
+    code: "es_VE",
+    name: "Español",
+    country: "Republica Bolivariana De Venezuela"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/usa.svg",
+    code: "en_US1",
+    name: "English",
+    country: "United States Of America"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/usa.svg",
+    code: "es_US1",
+    name: "Español",
+    country: "Estados Unidos De America"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/spain.svg",
+    code: "es_ES1",
+    name: "Español",
+    country: "España"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/mexico.svg",
+    code: "es_MX1",
+    name: "Español",
+    country: "Estados Unidos Mexicanos"
+
+  },
+  {
+
+    flag: "/assets/images/flags/countries/venezuela.svg",
+    code: "es_VE1",
+    name: "Español",
+    country: "Republica Bolivariana De Venezuela"
+
+  }
+
+];
+
 export default i18n;
 
 /*

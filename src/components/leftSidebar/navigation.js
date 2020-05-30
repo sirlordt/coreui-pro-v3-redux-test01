@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   //CSidebarNavDivider,
   //CSidebarNavDropdown,
@@ -5,16 +7,26 @@ import {
   CSidebarNavTitle
 } from "@coreui/react";
 
+import {
+  FontAwesomeIcon
+} from "@fortawesome/react-fontawesome";
+
+import {
+  faCoffee
+} from "@fortawesome/free-solid-svg-icons";
+
+import i18n from "../../config/i18n.config";
+
 export default [
   {
     _tag: CSidebarNavTitle,
-    _children: [ "Business" ]
+    _children: [ i18n.t( "Business" ) ]
   },
   {
     _tag: CSidebarNavItem,
     name: "Test01",
     to: "/home/test01",
-    icon: "cil-drop"
+    fontIcon: <FontAwesomeIcon icon={ faCoffee } />
   },
   {
     _tag: CSidebarNavItem,
@@ -24,7 +36,7 @@ export default [
   },
   {
     _tag: CSidebarNavTitle,
-    _children: [ "System" ]
+    _children: [ i18n.t( "System" ) ]
   },
   {
     _tag: CSidebarNavItem,

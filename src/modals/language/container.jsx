@@ -1,17 +1,26 @@
 import React, {
   Component
 } from "react";
+
 import {
   createPortal
 } from "react-dom";
+
 import {
   withRouter
 } from "react-router-dom";
+
+//import ScrollArea from "react-scrollbar";
+import ScrollBars from "react-scrollbars-custom";
+
 import {
   connect
 } from "react-redux";
+
 import {
-  CButton
+  CButton,
+  CListGroup,
+  CListGroupItem
 } from "@coreui/react";
 
 import {
@@ -22,9 +31,19 @@ import {
 } from "reactstrap";
 
 import PropTypes from "prop-types";
+
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
+
+import {
+  Trans,
+  withTranslation
+} from "react-i18next";
+
+import i18n, {
+  languages
+} from "../../config/i18n.config";
 
 import {
   changeLanguage,
@@ -47,8 +66,16 @@ class ChangeLanguageModal extends Component {
 
     super( props );
 
+    this.state = {
+
+      selectedLanguage: this.props.frontend.language
+
+    };
+
     // We create an element div for this modal
     this.element = document.createElement( "div" );
+
+    this.selectedItem = null; //React.createRef();
 
   }
 
@@ -69,11 +96,27 @@ class ChangeLanguageModal extends Component {
 
   }
 
+  onSelectLanguage = ( language ) => {
+
+    this.setState( {
+
+      selectedLanguage: language
+
+    } );
+
+  }
+
   onClickButtonChangeLanguage = ( event ) => {
 
     event && event.preventDefault();
 
-    //
+    i18n.changeLanguage( this.state.selectedLanguage );
+
+    this.props.changeLanguage( {
+
+      language: this.state.selectedLanguage
+
+    } );
 
   }
 
@@ -97,11 +140,23 @@ class ChangeLanguageModal extends Component {
 
   render() {
 
+    setTimeout( () => {
+
+      if ( this.selectedItem ) {
+
+        this.selectedItem.scrollIntoView( false );
+
+      }
+
+    }, 500 );
+
+
     return createPortal( (
 
       <Modal
+        //size="md"
         isOpen={ this.props.showMe }
-        className={ this.props.frontend.themeDark ? "no-c-app c-app c-dark-theme" : "no-c-app c-app" }
+        className={ this.props.frontend.themeDark ? "no-c-app c-app c-dark-theme rounded" : "no-c-app c-app rounded" }
         toggle={ ( event ) => {
 
           event.modalId = this.props.modalId;
@@ -125,13 +180,70 @@ class ChangeLanguageModal extends Component {
           } }
         >
 
-          Change Language
+          <Trans i18nKey="Change Language" />
 
         </ModalHeader>
 
         <ModalBody>
 
-          Here going a list a languages
+          <ScrollBars
+            style={ {
+              height: 200
+            } }
+            trackYProps={ {
+              className: "Scrollbars-Track-Vertical-Custom"
+            } }>
+
+            <CListGroup>
+
+              {
+
+                languages.map( ( languageInfo ) => {
+
+                  return (
+
+                    <CListGroupItem
+                      key={ languageInfo.code }
+                      action
+                      active={ this.state.selectedLanguage === languageInfo.code }
+                      onClick={ () => this.onSelectLanguage( languageInfo.code ) }
+                      innerRef={ ( element ) => {
+
+                        this.selectedItem = this.state.selectedLanguage === languageInfo.code ? element : this.selectedItem;
+
+                      } }
+                    >
+
+                      <div className="d-flex align-items-center">
+
+                        <img
+                          alt={ languageInfo.country }
+                          className="d-inline-block"
+                          style={ {
+                            width: "40px", height: "40px"
+                          } }
+                          src={ `${process.env.PUBLIC_URL}${languageInfo.flag}` }
+                        />
+
+                        <span className="d-inline-block ml-2">
+
+                          { `${languageInfo.name} (${languageInfo.country})` }
+
+                        </span>
+
+                      </div>
+
+                    </CListGroupItem>
+
+                  );
+
+                } )
+
+              }
+
+            </CListGroup>
+
+          </ScrollBars>
 
         </ModalBody>
 
@@ -155,7 +267,7 @@ class ChangeLanguageModal extends Component {
 
             <span className="ml-2">
 
-              Change language
+              <Trans i18nKey="Change language" />
 
             </span>
 
@@ -179,7 +291,7 @@ class ChangeLanguageModal extends Component {
 
             <span className="ml-2">
 
-              Cancel
+              <Trans i18nKey="Close" />
 
             </span>
 
@@ -218,4 +330,4 @@ const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
 
 const connectedComponent = connectedWrapper( ChangeLanguageModal );
 
-export default withRouter( connectedComponent );
+export default withRouter( withTranslation()( connectedComponent ) );

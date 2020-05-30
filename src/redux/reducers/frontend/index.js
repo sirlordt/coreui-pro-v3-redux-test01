@@ -3,7 +3,7 @@ import {
 } from "lodash";
 
 import detectBrowserLanguage from "detect-browser-language";
-import {
+import i18n, {
   i18nFallbackLanguages
 } from "../../../config/i18n.config";
 
@@ -20,7 +20,8 @@ import {
   _TOGGLE_RIGHT_SIDERBAR,
   _SHOW_MODAL,
   _CLOSE_MODAL,
-  _CLEAR_MODAL
+  _CLEAR_MODAL,
+  _CHANGE_LANGUAGE
 } from "../../constants";
 import SystemUtils from "../../../utils/systemUtils";
 
@@ -75,6 +76,8 @@ function reducer( state = initialState.frontend, action ) {
         result.sidebarMobile = jsonFrontendInfo.sidebarMobile || initialState.frontend.sidebarMobile;
         result.sidebarDisplay = jsonFrontendInfo.sidebarDisplay || initialState.frontend.sidebarDisplay;
         result.isRightSidebarOpen = jsonFrontendInfo.isRightSidebarOpen || initialState.frontend.isRightSidebarOpen;
+
+        i18n.changeLanguage( result.language );
 
       }
       catch ( error ) {
@@ -200,6 +203,49 @@ function reducer( state = initialState.frontend, action ) {
 
         };
         */
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _CHANGE_LANGUAGE: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        result.language = action.payload.language;
+
+        delete result.id; //not save the id
+
+        localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( result ) );
+
+        result.id = state.id;
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: "success"
+        };
 
       }
       catch ( error ) {

@@ -1,16 +1,25 @@
 import React, {
   Component
 } from "react";
+
 import {
   connect
 } from "react-redux";
+
 import PropTypes from "prop-types";
+
 import {
   CButton
 } from "@coreui/react";
+
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
+
+import {
+  Trans,
+  withTranslation
+} from "react-i18next";
 
 import {
   closeModal,
@@ -19,6 +28,7 @@ import {
 } from "../../redux/actions";
 
 import MessageModal from "../message";
+
 import ChangeLanguageModal from "../language";
 
 import SystemUtils from "../../utils/systemUtils";
@@ -84,7 +94,7 @@ class ModalManager extends Component {
 
         transactionId: modalId,
         clearModalCode: "NO_RESPONSE_FROM_SERVER_MODAL",
-        logge: null
+        logger: null
 
       } );
 
@@ -174,7 +184,7 @@ class ModalManager extends Component {
 
               <span className="ml-2">
 
-                Close
+                <Trans i18nKey="Close" />
 
               </span>
 
@@ -219,7 +229,7 @@ class ModalManager extends Component {
 
                 <span className="ml-2">
 
-                  Check again
+                  <Trans i18nKey="Check again" />
 
                 </span>
 
@@ -266,7 +276,7 @@ class ModalManager extends Component {
 
                 <span className="ml-2">
 
-                  Yes
+                  <Trans i18nKey="Yes" />
 
                 </span>
 
@@ -290,7 +300,7 @@ class ModalManager extends Component {
 
                 <span className="ml-2">
 
-                  No
+                  <Trans i18nKey="No" />
 
                 </span>
 
@@ -361,4 +371,4 @@ const connectedWrapper = connect( mapStateToProps, mapDispatchToProps );
 
 const connectedComponent = connectedWrapper( ModalManager );
 
-export default connectedComponent;
+export default withTranslation()( connectedComponent );
