@@ -76,6 +76,7 @@ class ChangeLanguageModal extends Component {
     this.element = document.createElement( "div" );
 
     this.selectedItem = null; //React.createRef();
+    this.selectedIndex = 0;
 
   }
 
@@ -83,6 +84,44 @@ class ChangeLanguageModal extends Component {
   componentDidMount() {
 
     modalRoot.appendChild( this.element );
+
+    setTimeout( () => {
+
+      if ( this.selectedItem ) {
+
+        this.selectedItem.focus();
+        this.selectedItem.scrollIntoView( false );
+
+      }
+
+    }, 100 );
+
+  }
+
+  componentDidUpdate( prevProps ) {
+
+    if ( prevProps.showMe !== this.props.showMe ) {
+
+      if ( this.props.showMe ) {
+
+        this.onSelectLanguage( this.props.frontend.language );
+
+      }
+
+      setTimeout( () => {
+
+        if ( this.selectedItem ) {
+
+          this.selectedItem.focus();
+          this.selectedItem.scrollIntoView( false );
+
+          //console.log( this.selectedIndex );
+
+        }
+
+      }, 100 );
+
+    }
 
   }
 
@@ -140,16 +179,8 @@ class ChangeLanguageModal extends Component {
 
   render() {
 
-    setTimeout( () => {
-
-      if ( this.selectedItem ) {
-
-        this.selectedItem.scrollIntoView( false );
-
-      }
-
-    }, 500 );
-
+    /*
+    */
 
     return createPortal( (
 
@@ -186,64 +217,75 @@ class ChangeLanguageModal extends Component {
 
         <ModalBody>
 
-          <ScrollBars
-            style={ {
-              height: 200
-            } }
-            trackYProps={ {
-              className: "Scrollbars-Track-Vertical-Custom"
-            } }>
+          <div className="custom-border-list">
 
-            <CListGroup>
+            <ScrollBars
+              style={ {
+                height: 200
+              } }
+              trackYProps={ {
+                className: "scrollbars-track-vertical-custom"
+              } }>
 
-              {
+              <CListGroup className="">
 
-                languages.map( ( languageInfo ) => {
+                {
 
-                  return (
+                  languages.map( ( languageInfo, index ) => {
 
-                    <CListGroupItem
-                      key={ languageInfo.code }
-                      action
-                      active={ this.state.selectedLanguage === languageInfo.code }
-                      onClick={ () => this.onSelectLanguage( languageInfo.code ) }
-                      innerRef={ ( element ) => {
+                    return (
 
-                        this.selectedItem = this.state.selectedLanguage === languageInfo.code ? element : this.selectedItem;
+                      <CListGroupItem
+                        href="#"
+                        className="border-0 custom-border-bottom-item cursor-pointer outline-0"
+                        key={ languageInfo.code }
+                        action
+                        active={ this.state.selectedLanguage === languageInfo.code }
+                        onClick={ () => this.onSelectLanguage( languageInfo.code ) }
+                        innerRef={ ( element ) => {
 
-                      } }
-                    >
+                          if ( this.state.selectedLanguage === languageInfo.code ) {
 
-                      <div className="d-flex align-items-center">
+                            this.selectedItem = element;
+                            this.selectedIndex = index;
 
-                        <img
-                          alt={ languageInfo.country }
-                          className="d-inline-block"
-                          style={ {
-                            width: "40px", height: "40px"
-                          } }
-                          src={ `${process.env.PUBLIC_URL}${languageInfo.flag}` }
-                        />
+                          }
 
-                        <span className="d-inline-block ml-2">
+                        } }
+                      >
 
-                          { `${languageInfo.name} (${languageInfo.country})` }
+                        <div className="d-flex align-items-center">
 
-                        </span>
+                          <img
+                            alt={ languageInfo.country }
+                            className="d-inline-block"
+                            style={ {
+                              width: "40px", height: "40px"
+                            } }
+                            src={ `${process.env.PUBLIC_URL}${languageInfo.flag}` }
+                          />
 
-                      </div>
+                          <span className="d-inline-block ml-2">
 
-                    </CListGroupItem>
+                            { `${languageInfo.name} (${languageInfo.country})` }
 
-                  );
+                          </span>
 
-                } )
+                        </div>
 
-              }
+                      </CListGroupItem>
 
-            </CListGroup>
+                    );
 
-          </ScrollBars>
+                  } )
+
+                }
+
+              </CListGroup>
+
+            </ScrollBars>
+
+          </div>
 
         </ModalBody>
 

@@ -169,7 +169,7 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
-.ScrollbarsCustom .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom {
+.ScrollbarsCustom .ScrollbarsCustom-Track.scrollbars-track-vertical-custom {
 
   top: 0 !important;
   width: 7px !important;
@@ -179,7 +179,8 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
-.ScrollbarsCustom:hover .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom {
+.ScrollbarsCustom:hover .ScrollbarsCustom-Track.scrollbars-track-vertical-custom,
+.ScrollbarsCustom:active .ScrollbarsCustom-Track.scrollbars-track-vertical-custom {
 
   //background: gray !important;
   background: rgba(0, 0, 0, 0.3) none repeat scroll 0% 0% !important;
@@ -187,7 +188,8 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
-.c-dark-theme .ScrollbarsCustom:hover .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom {
+.c-dark-theme .ScrollbarsCustom:hover .ScrollbarsCustom-Track.scrollbars-track-vertical-custom,
+.c-dark-theme .ScrollbarsCustom:active .ScrollbarsCustom-Track.scrollbars-track-vertical-custom {
 
   //background: gray !important;
   background: $gray-700__lt !important;
@@ -195,7 +197,7 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
-.c-dark-theme .ScrollbarsCustom .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom .ScrollbarsCustom-Thumb {
+.c-dark-theme .ScrollbarsCustom .ScrollbarsCustom-Track.scrollbars-track-vertical-custom .ScrollbarsCustom-Thumb {
 
   //background: gray !important;
   background: $gray-500__lt !important;
@@ -204,7 +206,7 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
-.c-dark-theme .ScrollbarsCustom:hover .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom .ScrollbarsCustom-Thumb {
+.c-dark-theme .ScrollbarsCustom:hover .ScrollbarsCustom-Track.scrollbars-track-vertical-custom .ScrollbarsCustom-Thumb {
 
   //background: gray !important;
   background: $gray-100__lt !important;
@@ -212,7 +214,45 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 
 }
 
+.c-dark-theme .custom-border-list {
 
+  border-radius: 4px;
+  border: solid 1px $list-group-border-color__dt;
+  padding: 4px;
+
+}
+
+.c-dark-theme :not(:last-child).custom-Border-bottom-item {
+
+  border-bottom: solid 1px $list-group-border-color__dt !important;
+
+}
+
+.custom-border-list {
+
+  border-radius: 4px;
+  border: solid 1px $list-group-border-color__lt;
+  padding: 4px;
+
+}
+
+:not(:last-child).custom-border-bottom-item  {
+
+  border-bottom: solid 1px $list-group-border-color__lt !important;
+
+}
+
+.cursor-pointer{
+
+  cursor: pointer;
+
+}
+
+.outline-0 {
+
+  outline: 0;
+
+}
 
 /*
 .ScrollbarsCustom:hover .ScrollbarsCustom-Track.Scrollbars-Track-Vertical-Custom {
@@ -223,6 +263,7 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 }
 */
 
+/*
 .scrollbar {
 
   border-radius: 3px;
@@ -256,6 +297,7 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
   opacity: .6 !important;
 
 }
+*/
 
 
 /*
