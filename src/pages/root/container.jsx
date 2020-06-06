@@ -15,9 +15,11 @@ import {
 
 import PropTypes from "prop-types";
 
+/*
 import {
-  initFrontendState
+  getUserActions
 } from "../../redux/actions";
+*/
 
 import SystemUtils from "../../utils/systemUtils";
 
@@ -61,11 +63,25 @@ class RootPage extends Component {
 
   componentDidMount() {
 
-    this.props.initFrontendState( {
+    /*
+    try {
 
-      transactionId: this.state.id
+      const strAuthorization = this.props.authentication.active && this.props.authentication.accounts ? this.props.authentication.accounts[ this.props.authentication.active ].Authorization : null;
 
-    } );
+      this.props.getUserActions( {
+
+        transactionId: this.state.id,
+        authorization: strAuthorization
+
+      } );
+
+    }
+    catch ( error ) {
+
+      //
+
+    }
+    */
 
   }
 
@@ -175,9 +191,7 @@ class RootPage extends Component {
 RootPage.propTypes = propTypes;
 RootPage.defaultProps = defaultProps;
 
-const mapDispatchToProps = {
-  initFrontendState
-};
+const mapDispatchToProps = {};
 
 const mapStateToProps = ( state ) => {
 

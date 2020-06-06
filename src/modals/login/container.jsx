@@ -143,10 +143,12 @@ class LoginModal extends Component {
          bFieldPasswordIsValid ) {
 
       this.setState( {
+
         fieldUsernameIsValid: true,
         fieldPasswordIsValid: true,
         buttonLoginDisabled: true,
         buttonCancelDisabled: true
+
       } );
 
       /*
@@ -158,18 +160,22 @@ class LoginModal extends Component {
       */
 
       this.props.login( {
+
         transactionId: this.state.id,
         username: this.state.username,
         password: this.state.password
         //Callback: this.handleReducerNotification
+
       } );
 
     }
     else {
 
       this.setState( {
+
         fieldUsernameIsValid: bFieldUsernameIsValid,
         fieldPasswordIsValid: bFieldPasswordIsValid
+
       } );
 
     }

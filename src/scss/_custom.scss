@@ -13,9 +13,22 @@
 
 }
 
+textarea.form-control {
+
+  resize: none;
+
+}
+
+
 input.form-control:focus,
+input.custom-file-input:focus,
+.custom-select:focus,
 div.input-group:focus-within > input.form-control,
-input.form-control:active {
+input.form-control:active,
+.custom-file-input:focus ~ .custom-file-label,
+.custom-select:focus,
+textarea.form-control:focus
+{
 
   //color: #5c6873;
   //background-color: #fff;
@@ -23,22 +36,26 @@ input.form-control:active {
   //border-color: gray;
   border-color: $gray-500__lt;
   outline: 0;
-  box-shadow: none;
+  box-shadow: none !important;
   //box-shadow: 0 0 0 1px $gray-600__lt;
 
 }
 
 
 .c-dark-theme input.form-control:focus,
+.c-dark-theme input.custom-file-input:focus,
+.c-dark-theme .custom-select:focus,
 .c-dark-theme div:focus-within > input.form-control,
-.c-dark-theme input.form-control:active {
+.c-dark-theme .custom-file-input:focus ~ .custom-file-label,
+.c-dark-theme input.form-control:active,
+.c-dark-theme textarea.form-control:focus {
 
   //color: #5c6873;
   //background-color: #fff;
   //border-color: #8ad4ee;
   border-color: $gray-700__lt;
   outline: 0;
-  box-shadow: none;
+  box-shadow: none !important;
   background-color: rgba(255, 255, 255, 0.15);
   //box-shadow: 0 0 0 1px $gray-300__lt;
 
@@ -251,6 +268,51 @@ html:not([dir="rtl"]) .form-control.field-password.is-invalid {
 .outline-0 {
 
   outline: 0;
+
+}
+
+.fixed-max-height {
+
+  max-height: calc( 100vh - 162px ) !important; /*162 pixels come from header height and footer height*/
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+
+}
+
+.custom-select {
+
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+
+}
+
+.width-38_25px {
+
+  width: 38.25px !important
+
+}
+
+label {
+
+  margin-bottom: 2px;
+
+}
+
+.custom-invalid-feedback {
+
+  display: block;
+  height: 1.5em;
+  margin-bottom: 2px;
+
+}
+
+.custom-file-label {
+
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 100px;
 
 }
 

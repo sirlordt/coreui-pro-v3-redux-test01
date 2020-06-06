@@ -5,9 +5,9 @@ import React, {
 import {
   Redirect, Route, Switch
 } from "react-router-dom";
-import {
-  CContainer
-} from "@coreui/react";
+//import {
+//  CContainer
+//} from "@coreui/react";
 import Loading from "../../components/loading";
 
 // routes config
@@ -17,30 +17,30 @@ class container extends Component {
 
   render() {
 
+    //        <CContainer fluid>
+    // </CContainer> className="c-main"
     return (
 
-      <main className="c-main">
-        <CContainer fluid>
-          <Suspense fallback={ <Loading /> }>
-            <Switch>
-              {routes.map( ( route, idx ) => {
+      <main className="fixed-max-height">
+        <Suspense fallback={ <Loading /> }>
+          <Switch>
+            {routes.map( ( route, idx ) => {
 
-                return route.component ? (
-                  <Route
-                    key={ idx }
-                    path={ route.path }
-                    exact={ route.exact }
-                    name={ route.name }
-                    render={ ( props ) => (
-                      <route.component { ...props } />
-                    ) } />
-                ) : ( null );
+              return route.component ? (
+                <Route
+                  key={ idx }
+                  path={ route.path }
+                  exact={ route.exact }
+                  name={ route.name }
+                  render={ ( props ) => (
+                    <route.component { ...props } />
+                  ) } />
+              ) : ( null );
 
-              } )}
-              <Redirect from="/" to="/home/test01" />
-            </Switch>
-          </Suspense>
-        </CContainer>
+            } )}
+            <Redirect from="/" to="/home/update/tips" />
+          </Switch>
+        </Suspense>
       </main>
 
     );

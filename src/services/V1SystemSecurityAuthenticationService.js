@@ -1,8 +1,9 @@
 //import CommonUtilities from "../utils/commonUtilities";
+const axios = require( "axios" );
 
-const debug = require( "debug" )( "SystemSecurityAuthenticationServiceV1" );
+const debug = require( "debug" )( "V1SystemSecurityAuthenticationService" );
 
-class SystemSecurityAuthenticationServiceV1 {
+class V1SystemSecurityAuthenticationService {
 
   static async callLogin( backend,
                           headers,
@@ -25,20 +26,28 @@ class SystemSecurityAuthenticationServiceV1 {
       const options = {
         method: "POST",
         headers,
-        body: JSON.stringify( body )
+        data: body,
+        //body: JSON.stringify( body )
+
+        validateStatus: () => {
+
+          return true;
+
+        }
+
       };
 
       let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
 
       strRequestURI += "/v1/system/security/authentication/login";
 
-      const callResult = await fetch( strRequestURI,
+      const callResult = await axios( strRequestURI,
                                       options );
 
       result.output = callResult ? {
         status: callResult.status,
         statusText: callResult.statusText,
-        body: await callResult.json()
+        body: callResult.data
       } :
         {
           status: null,
@@ -89,20 +98,27 @@ class SystemSecurityAuthenticationServiceV1 {
       const options = {
         method: "POST",
         headers,
-        body: null //JSON.stringify( body ),
+        data: null, //JSON.stringify( body ),
+
+        validateStatus: () => {
+
+          return true;
+
+        }
+
       };
 
       let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
 
       strRequestURI += "/v1/system/security/authentication/token/check";
 
-      const callResult = await fetch( strRequestURI,
+      const callResult = await axios( strRequestURI,
                                       options );
 
       result.output = callResult ? {
         status: callResult.status,
         statusText: callResult.statusText,
-        body: await callResult.json()
+        body: callResult.data
       } :
         {
           status: null,
@@ -151,20 +167,27 @@ class SystemSecurityAuthenticationServiceV1 {
       const options = {
         method: "POST",
         headers,
-        body: null //JSON.stringify( body ),
+        data: null, //JSON.stringify( body ),
+
+        validateStatus: () => {
+
+          return true;
+
+        }
+
       };
 
       let strRequestURI = `${backend.protocol}${backend.host}:${backend.port}${backend.rootPath}`;
 
       strRequestURI += "/v1/system/security/authentication/logout";
 
-      const callResult = await fetch( strRequestURI,
+      const callResult = await axios( strRequestURI,
                                       options );
 
       result.output = callResult ? {
         status: callResult.status,
         statusText: callResult.statusText,
-        body: await callResult.json()
+        body: callResult.data
       } :
         {
           status: null,
@@ -201,4 +224,4 @@ class SystemSecurityAuthenticationServiceV1 {
 
 }
 
-export default SystemSecurityAuthenticationServiceV1;
+export default V1SystemSecurityAuthenticationService;

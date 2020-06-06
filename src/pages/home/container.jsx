@@ -2,11 +2,17 @@ import React, {
   Component,
   Suspense
 } from "react";
+
 import {
   connect
 } from "react-redux";
+
 import classNames from "classnames";
+
 import PropTypes from "prop-types";
+
+//import ScrollBars from "react-scrollbars-custom";
+
 import {
   CFooter,
   CHeader
@@ -26,7 +32,8 @@ import {
   resetActiveUser,
   deleteResult,
   showModal,
-  closeModal
+  closeModal,
+  getUserActions
 } from "../../redux/actions";
 
 import SystemUtils from "../../utils/systemUtils";
@@ -181,6 +188,24 @@ class HomePage extends Component {
 
     }, 3000 );
 
+    try {
+
+      const strAuthorization = this.props.authentication.active && this.props.authentication.accounts ? this.props.authentication.accounts[ this.props.authentication.active ].Authorization : null;
+
+      this.props.getUserActions( {
+
+        transactionId: this.state.id,
+        authorization: strAuthorization
+
+      } );
+
+    }
+    catch ( error ) {
+
+      //
+
+    }
+
     this.tokenCheck();
 
   }
@@ -219,23 +244,37 @@ class HomePage extends Component {
           }
 
           <div className="c-wrapper">
+
             <CHeader withSubheader>
+
               <Suspense fallback={ <Loading /> }>
+
                 <Header />
+
               </Suspense>
+
             </CHeader>
+
             <div className="c-body">
+
               <Suspense fallback={ <Loading /> }>
                 {
                   isAuthenticated ? <Content /> : <Loading />
                 }
               </Suspense>
+
             </div>
-            <CFooter className="d-sm-flex justify-content-center" fixed>
+
+            <CFooter className="d-sm-flex justify-content-center">
+
               <Suspense fallback={ <Loading /> }>
+
                 <Footer />
+
               </Suspense>
+
             </CFooter>
+
           </div>
 
         </div>
@@ -259,7 +298,8 @@ const mapDispatchToProps = {
   resetActiveUser,
   toggleDark,
   showModal,
-  closeModal
+  closeModal,
+  getUserActions
 };
 
 const mapStateToProps = ( state ) => {

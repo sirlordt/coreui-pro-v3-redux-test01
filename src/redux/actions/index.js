@@ -17,6 +17,7 @@ import deleteResult from "./deleteResult";
 import showModal from "./showModal";
 import closeModal from "./closeModal";
 import changeLanguage from "./changeLanguage";
+import getUserActions from "./getUserActions";
 
 export {
   initFrontendState,
@@ -34,5 +35,6 @@ export {
   deleteResult,
   showModal,
   closeModal,
-  changeLanguage
+  changeLanguage,
+  getUserActions
 };

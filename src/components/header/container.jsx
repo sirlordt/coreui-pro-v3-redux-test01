@@ -47,7 +47,8 @@ import {
   tokenCheck,
   logout,
   showModal,
-  closeModal
+  closeModal,
+  getUserActions
 } from "../../redux/actions";
 
 import SystemUtils from "../../utils/systemUtils";
@@ -97,6 +98,13 @@ class Header extends Component {
 
       }
       else if ( strCode === "SUCCESS_LOGOUT" ) {
+
+        this.props.getUserActions( {
+
+          transactionId: this.state.id,
+          authorization: null
+
+        } );
 
         this.props.showModal( {
 
@@ -159,6 +167,11 @@ class Header extends Component {
   render() {
 
     const isAuthenticated = !!( this.props.authentication.active );
+
+    const showButtonLogin = !!( Object.keys( this.props.frontend.userActions ).length === 0 || this.props.frontend.userActions[ "v1.system.auth.login" ] );
+    const showButtonSignup = !!( Object.keys( this.props.frontend.userActions ).length === 0 ||
+                                 ( this.props.frontend.userActions[ "v1.system.user.signup" ] &&
+                                   this.props.frontend.userActions[ "v1.system.user.signup.activate" ] ) );
 
     const t = this.props.t; //Translate functions injected by withTranslation function
 
@@ -226,39 +239,55 @@ class Header extends Component {
 
               <React.Fragment>
 
-                <CButton
-                  className="ml-2 box-shadow-none"
-                  color="primary"
-                  onClick={ () => {
+                {
 
-                    this.props.history.push( "/login" );
+                  showButtonLogin ? (
 
-                  } }
-                >
+                    <CButton
+                      className="ml-2 box-shadow-none"
+                      color="primary"
+                      onClick={ () => {
 
-                  <FontAwesomeIcon icon="sign-in-alt" />
+                        this.props.history.push( "/login" );
 
-                  <span className="ml-2 d-sm-down-none">
+                      } }
+                    >
 
-                    <Trans i18nKey="Login" />
+                      <FontAwesomeIcon icon="sign-in-alt" />
 
-                  </span>
+                      <span className="ml-2 d-sm-down-none">
 
-                </CButton>
+                        <Trans i18nKey="Login" />
 
-                <CButton
-                  className="ml-2 box-shadow-none"
-                  color="success">
+                      </span>
 
-                  <FontAwesomeIcon icon="user-plus" />
+                    </CButton>
 
-                  <span className="ml-2 d-sm-down-none">
+                  ) : null
 
-                    <Trans i18nKey="Signup" />
+                }
 
-                  </span>
+                {
 
-                </CButton>
+                  showButtonSignup ? (
+
+                    <CButton
+                      className="ml-2 box-shadow-none"
+                      color="success">
+
+                      <FontAwesomeIcon icon="user-plus" />
+
+                      <span className="ml-2 d-sm-down-none">
+
+                        <Trans i18nKey="Signup" />
+
+                      </span>
+
+                    </CButton>
+
+                  ) : null
+
+                }
 
               </React.Fragment>
 
@@ -333,7 +362,8 @@ const mapDispatchToProps = {
   tokenCheck,
   logout,
   showModal,
-  closeModal
+  closeModal,
+  getUserActions
 };
 
 const mapStateToProps = ( state ) => {

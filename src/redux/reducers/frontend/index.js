@@ -21,7 +21,9 @@ import {
   _SHOW_MODAL,
   _CLOSE_MODAL,
   _CLEAR_MODAL,
-  _CHANGE_LANGUAGE
+  _CHANGE_LANGUAGE,
+  _GET_USER_ACTIONS_SUCCESS,
+  _GET_USER_ACTIONS_FAILED
 } from "../../constants";
 import SystemUtils from "../../../utils/systemUtils";
 
@@ -54,7 +56,7 @@ function reducer( state = initialState.frontend, action ) {
 
       try {
 
-        const jsonFrontendInfo = CommonUtilities.parseJSON( localStorage.getItem( "_FRONTEND_INFO" ) ) || {};
+        const jsonFrontendInfo = CommonUtilities.parseJSON( localStorage.getItem( "_FRONTEND_DATA" ) ) || {};
 
         let strUseThisLanguage = detectBrowserLanguage().replace( "-", "_" );
 
@@ -112,7 +114,7 @@ function reducer( state = initialState.frontend, action ) {
 
         delete state.id;
 
-        localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( state ) );
+        localStorage.setItem( "_FRONTEND_DATA", JSON.stringify( state ) );
 
       }
       catch ( error ) {
@@ -185,7 +187,7 @@ function reducer( state = initialState.frontend, action ) {
 
         delete result.id; //not save the id
 
-        localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( result ) );
+        localStorage.setItem( "_FRONTEND_DATA", JSON.stringify( result ) );
 
         result.id = state.id;
 
@@ -237,7 +239,7 @@ function reducer( state = initialState.frontend, action ) {
 
         delete result.id; //not save the id
 
-        localStorage.setItem( "_FRONTEND_INFO", JSON.stringify( result ) );
+        localStorage.setItem( "_FRONTEND_DATA", JSON.stringify( result ) );
 
         result.id = state.id;
 
@@ -612,6 +614,84 @@ function reducer( state = initialState.frontend, action ) {
 
         }
 
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _GET_USER_ACTIONS_SUCCESS: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        if ( !result.userActions ) {
+
+          result.userActions = {};
+
+        }
+
+        result.userActions = action.payload.response.Data[ 0 ];
+
+      }
+      catch ( error ) {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: _ERROR_IN_REDUCER,
+          mark: SystemUtils.getUUIDv4(),
+          data: error
+        };
+
+      }
+
+      break;
+
+    }
+
+    case _GET_USER_ACTIONS_FAILED: {
+
+      try {
+
+        result = cloneDeep( state );
+
+        if ( !result.results ) {
+
+          result.results = {};
+
+        }
+
+        result.results[ action.payload.transactionId ] = {
+          actionType: action.type,
+          mark: SystemUtils.getUUIDv4(),
+          data: action.payload.response
+        };
 
       }
       catch ( error ) {

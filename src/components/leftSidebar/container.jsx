@@ -12,12 +12,13 @@ import {
   CSidebar,
   CSidebarBrand,
   CSidebarNav,
-  CSidebarNavDivider,
-  CSidebarNavTitle,
-  CNavItem,
-  CProgress,
+  //CSidebarNavDivider,
+  //CSidebarNavTitle,
+  //CNavItem,
+  //CProgress,
   CSidebarMinimizer,
-  CSidebarNavItem
+  CSidebarNavItem,
+  CLink
 } from "@coreui/react";
 
 import {
@@ -25,7 +26,7 @@ import {
 } from "@fortawesome/react-fontawesome";
 
 import {
-  Trans,
+  //Trans,
   withTranslation
 } from "react-i18next";
 
@@ -52,7 +53,7 @@ class LeftSidebar extends Component {
 
   render() {
 
-    const t = this.props.t; //Translate functions injected by withTranslation function
+    //const t = this.props.t; //Translate functions injected by withTranslation function
 
     return (
 
@@ -78,8 +79,35 @@ class LeftSidebar extends Component {
 
             <CCreateElement items={ navigation } />
 
-            <CSidebarNavItem name={ t( "Test02" ) } to="/home/test02" icon={ <FontAwesomeIcon icon="times" /> } />
+            <CSidebarNavItem>
 
+              <CLink
+                className="c-sidebar-nav-link"
+                to="/home/test02"
+                exact
+                activeClassName="c-active"
+              >
+                <FontAwesomeIcon className="c-sidebar-nav-icon" icon="times" />
+                Test02
+              </CLink>
+
+            </CSidebarNavItem>
+            {/*
+            <CSidebarNavItem>
+
+              {/ *  name={ t( "Test02" ) } to="/home/test02" icon={ <FontAwesomeIcon icon="times" /> } * / }
+              <CLink
+                className="c-sidebar-nav-link"
+                to="/home/test02"
+              >
+                <FontAwesomeIcon icon="times" />
+                Test02
+              </CLink>
+
+            </CSidebarNavItem>
+            */}
+
+            { /*
             <CSidebarNavDivider />
 
             <CSidebarNavTitle>
@@ -121,6 +149,7 @@ class LeftSidebar extends Component {
               <small className="text-muted">243GB/256GB</small>
 
             </CNavItem>
+            */ }
 
           </CSidebarNav>
 

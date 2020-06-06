@@ -30,5 +30,6 @@
   "Business": "Negocio",
   "BUSINESS": "NEGOCIO",
   "System": "Sistema",
-  "SYSTEM": "SISTEMA"
+  "SYSTEM": "SISTEMA",
+  "Authorization token provided is expired": "Token de autorización usado está expirado"
 }

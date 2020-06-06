@@ -10,7 +10,6 @@ import {
   withRouter
 } from "react-router-dom";
 
-//import ScrollArea from "react-scrollbar";
 import ScrollBars from "react-scrollbars-custom";
 
 import {

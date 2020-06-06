@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 
 import {
   //CSidebarNavDivider,
@@ -7,13 +7,11 @@ import {
   CSidebarNavTitle
 } from "@coreui/react";
 
+/*
 import {
   FontAwesomeIcon
 } from "@fortawesome/react-fontawesome";
-
-import {
-  faCoffee
-} from "@fortawesome/free-solid-svg-icons";
+*/
 
 import i18n from "../../config/i18n.config";
 
@@ -24,11 +22,14 @@ export default [
   },
   {
     _tag: CSidebarNavItem,
-    name: "Test01",
-    to: "/home/test01",
-    fontIcon: <FontAwesomeIcon icon={ faCoffee } />
-  },
-  {
+    name: "Update Tips",
+    to: "/home/update/tips",
+    icon: "cil-pencil"
+  }
+];
+
+/*
+{
     _tag: CSidebarNavItem,
     name: "Test02",
     to: "/home/test02",
@@ -50,4 +51,4 @@ export default [
     to: "/home/test02",
     icon: "cil-pencil"
   }
-];
+*/

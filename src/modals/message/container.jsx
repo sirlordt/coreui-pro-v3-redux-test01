@@ -85,7 +85,7 @@ class MessageModal extends Component {
 
       <Modal
         isOpen={ this.props.showMe }
-        className={ this.props.frontend.themeDark ? "no-c-app c-app c-dark-theme" : "no-c-app c-app" }
+        className={ this.props.frontend.themeDark ? "no-c-app rounded c-app c-dark-theme" : "no-c-app rounded c-app" }
         toggle={ this.onClickButtonClose }
         //closeOnBackdrop={ false }
         //backdrop={ false }

@@ -70,7 +70,9 @@ const initialState = {
 
     results: {},
 
-    modalStack: new Map()
+    modalStack: new Map(),
+
+    userActions: {}
 
   }
 
